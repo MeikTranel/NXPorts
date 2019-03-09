@@ -1,0 +1,15 @@
+<Project>
+  <!-- General Metadata -->
+  <PropertyGroup>
+    <Title>NXPorts</Title>
+    <Description>A utility library to add export functions to the output dll on build.</Description>
+    <Authors>Meik Tranel</Authors>
+    <Version>0.1</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Lowest possible platform to offer System.Runtime.InteropServices.CallingConvention -->
+    <TargetFramework>netstandard1.1</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- 
+      TODO: Theoretically we should include net46 as well (considering https://github.com/Microsoft/msbuild/issues/4198#issuecomment-468045508),
+      but PeNet doesn't support it.
+    -->
+    <TargetFrameworks>net472;netcoreapp2.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/NXPorts/NXPorts.csproj" />
+    <ProjectReference Include="../../src/NXPorts.Attributes/NXPorts.Attributes.csproj" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="MSBuild.ProjectCreation" Version="1.2.8" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.4.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.10.0" />
+    <PackageReference Include="PeNet" Version="1.0.1" />
+  </ItemGroup>
+  
+</Project>
