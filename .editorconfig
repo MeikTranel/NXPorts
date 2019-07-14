@@ -6,7 +6,7 @@ indent_style = space
 end_of_line = crlf
 insert_final_newline = false
 
-[*.{targets,props,csproj,nuspec}]
+[*.{targets,props,csproj,nuspec,cake}]
 tab_width = 2
 indent_size = 2
 

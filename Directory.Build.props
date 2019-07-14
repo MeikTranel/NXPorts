@@ -4,12 +4,26 @@
     <Title>NXPorts</Title>
     <Description>A utility library to add export functions to the output dll on build.</Description>
     <Authors>Meik Tranel</Authors>
-    <Version>0.1</Version>
+    <VersionPrefix>0.1</VersionPrefix>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
+  <!-- CSProj/Build related settings -->
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <!-- Customization -->
+  <PropertyGroup>
+    <!--
+      Establish the following kinds of builds:
+        - dev
+        - prerelease
+        - release
+      These types shall be used to tweak the build further
+      based on the type of build we are initiating.
+    -->
+    <BuildType>prerelease</BuildType>
   </PropertyGroup>
 </Project>

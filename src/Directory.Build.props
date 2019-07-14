@@ -1,8 +1,9 @@
 <Project>
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
+  <!-- Miscellaneous tweaks -->
   <PropertyGroup>
-    <IsTestProject>true</IsTestProject>
-    <IsPackable>false</IsPackable>
+    <!-- Avoid annoying behavior in regards to `dotnet test`ing a solution file -->
+    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 </Project>
