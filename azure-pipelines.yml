@@ -1,8 +1,3 @@
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 trigger:
 - master
 
@@ -14,6 +9,12 @@ variables:
   BuildType: 'prerelease'
 
 steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '2.2.301'
+    includePreviewVersions: true
+  displayName: 'Install .NET SDK'
 - script: dotnet test --configuration $(buildConfiguration)
   displayName: 'Test'
 - script: dotnet pack --configuration $(buildConfiguration)
