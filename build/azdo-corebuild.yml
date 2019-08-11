@@ -1,0 +1,33 @@
+parameters:
+  buildConfiguration: 'Release'
+  BuildType: ''
+
+steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '2.2.301'
+    includePreviewVersions: true
+  displayName: 'Install .NET SDK'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    configuration: ${{ parameters.buildConfiguration }}
+    buildProperties: 'BuildType=${{ parameters.BuildType }}'
+  displayName: 'Test'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: VSTest
+    testResultsFiles: '**/*.trx'
+    failTaskOnFailedTests: true
+  displayName: 'Publish test results'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'pack'
+    configuration: ${{ parameters.buildConfiguration }}
+    buildProperties: 'BuildType=${{ parameters.BuildType }}'
+    outputDir: $(Build.ArtifactStagingDirectory)
+  displayName: 'Package NuGets'
