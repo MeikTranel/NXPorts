@@ -5,15 +5,18 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace NXPorts.Tests
+namespace NXPorts.Tests.Infrastructure
 {
-    class TestEnvironment : IDisposable
+    public class TestEnvironment : IDisposable
     {
         readonly string oldWorkingDirectory = Environment.CurrentDirectory;
         public TestEnvironment()
         {
-            var testPWD = Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, Guid.NewGuid().ToString("n").Substring(0, 8)));
+            var testPWD = Directory.CreateDirectory(
+                Path.Combine(Environment.CurrentDirectory, Guid.NewGuid().ToString("n").Substring(0, 8))
+            );
             Environment.CurrentDirectory = testPWD.FullName;
         }
 
@@ -99,29 +102,12 @@ namespace NXPorts.Tests
             }
         }
 
-#region IDisposable Support
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                // TODO: dispose managed state (managed objects).
-            }
-            //Cleanup PWD and toggle back to old PWD
-            var testPWD = Environment.CurrentDirectory;
-            Environment.CurrentDirectory = oldWorkingDirectory;
-            Directory.Delete(testPWD, true);
-        }
-
-        ~TestEnvironment() {
-          Dispose(false);
-        }
-
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            Environment.CurrentDirectory = oldWorkingDirectory;
+            //Ideally i wanted to remove all files after the environment is disposed
+            //but due to some hardships with unloading unmanaged assemblies loaded using
+            //PInvoke we have to make due with what we have.
         }
-#endregion
-
     }
 }

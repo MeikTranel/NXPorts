@@ -64,7 +64,7 @@ namespace NXPorts
             }
             catch (Exception E)
             {
-                throw new InvalidOperationException("DNLib encountered an exception while trying to load", E);
+                throw new InvalidOperationException("DNLib encountered an exception while trying to load the assembly.", E);
             }
         }
 

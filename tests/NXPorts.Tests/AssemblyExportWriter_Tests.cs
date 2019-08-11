@@ -1,37 +1,42 @@
-﻿using NXPorts;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NXPorts.Tests.Infrastructure;
 
 namespace NXPorts.Tests
 {
     [TestClass]
     public class AssemblyExportWriter_Tests
     {
+        private delegate string DoSomethingDelegate();
         [TestMethod]
-        public void ProducesAssemblyWithOneExport()
+        public void ProducesAssemblyWithOneWorkingExport()
         {
-
             using (var testEnv = new TestEnvironment())
             {
                 var testCode = @"namespace Test {
                                     public class TestClassA {
                                         [NXPorts.Attributes.Export]
-                                        public static int DoShizzle()
+                                        public static string DoSomething()
                                         {
-                                            return 5;
+                                            return ""TestReturnValue"";
                                         }
                                     }
                                 }";
                 if (!testEnv.CreateTestDLL("test", new[] { testCode }))
                     Assert.Fail("Test compile failed.");
+
                 using (var testExportAttributedAssembly = new ExportAttributedAssembly("./test.dll"))
                 {
                     var writer = new AssemblyExportWriterTask();
                     writer.Write(testExportAttributedAssembly, "./test.dll");
                 }
 
-                var resultPEFile = new PeNet.PeFile("./test.dll");
-                Assert.AreEqual(1, resultPEFile.ExportedFunctions.Length);
-                Assert.AreEqual("DoShizzle", resultPEFile.ExportedFunctions[0].Name);
+                Assert.That.RunsWithoutError<DoSomethingDelegate>(
+                    "./test.dll",
+                    "DoSomething",
+                    d => {
+                        Assert.AreEqual("TestReturnValue", d());
+                    }
+                );
             }
         }
     }

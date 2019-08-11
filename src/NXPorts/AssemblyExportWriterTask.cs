@@ -5,6 +5,7 @@ using dnlib.PE;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using System;
+using System.Diagnostics;
 using System.IO;
 using SysInterop = System.Runtime.InteropServices;
 
@@ -55,6 +56,7 @@ namespace NXPorts
                         returnType
                     );
                 }
+                RemoveToxicDebuggableAttribute(sourceAssembly.Module);
 
                 var moduleWriterOptions = new ModuleWriterOptions(sourceAssembly.Module);
                 moduleWriterOptions.Cor20HeaderOptions.Flags = StrictenCor20HeaderFlags(moduleWriterOptions.Cor20HeaderOptions.Flags);
@@ -62,6 +64,21 @@ namespace NXPorts
                 moduleWriterOptions.PEHeadersOptions.Characteristics |= Characteristics.Dll;
 
                 sourceAssembly.Module.Write(outputStream, moduleWriterOptions);
+            }
+        }
+
+        private static void RemoveToxicDebuggableAttribute(ModuleDefMD module)
+        {
+            var ca = module.Assembly.CustomAttributes.Find("System.Diagnostics.DebuggableAttribute");
+            if (ca != null && ca.ConstructorArguments.Count == 1)
+            {
+                var arg = ca.ConstructorArguments[0];
+                // VS' debugger crashes if value == 0x107, so clear EnC bit
+                if (arg.Type.FullName == "System.Diagnostics.DebuggableAttribute/DebuggingModes" && arg.Value is int value && value == 0x107)
+                {
+                    arg.Value = value & ~(int)DebuggableAttribute.DebuggingModes.EnableEditAndContinue;
+                    ca.ConstructorArguments[0] = arg;
+                }
             }
         }
 
