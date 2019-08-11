@@ -1,0 +1,11 @@
+﻿<Project>
+  <PropertyGroup>
+    <NXPortsTaskAssembly Condition=" '$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)\NETCOREMSBuild\NXPorts.dll</NXPortsTaskAssembly>
+    <NXPortsTaskAssembly Condition=" '$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)\NETFXMSBuild\NXPorts.dll</NXPortsTaskAssembly>
+  </PropertyGroup>
+  
+  <UsingTask AssemblyFile="$(NXPortsTaskAssembly)" TaskName="NXPorts.AssemblyExportWriterTask" />
+  <Target Name="WriteExports" AfterTargets="CoreCompile">
+    <AssemblyExportWriterTask InputAssembly="%(IntermediateAssembly.Identity)" OutputPath="%(IntermediateAssembly.Identity)" />
+  </Target>
+</Project>

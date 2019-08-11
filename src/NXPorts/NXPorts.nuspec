@@ -9,10 +9,11 @@
   </metadata>
   <dependencies/>
   <files>
+    <file src=".\build\**\*" target="build\" />
     <file src="..\NXPorts.Attributes\bin\$configuration$\netstandard1.1\NXPorts.Attributes.dll" target="lib\NXPorts.Attributes.dll" />
-    <file src=".\bin\$configuration$\net46\NXPorts.*.dll" target="build\NETFXMSBuild" />
+    <file src=".\bin\$configuration$\net46\NXPorts*.dll" target="build\NETFXMSBuild" />
     <file src=".\bin\$configuration$\net46\dnlib.dll" target="build\NETFXMSBuild" />
-    <file src=".\bin\$configuration$\netstandard2.0\NXPorts.*.dll" target="build\NETCOREMSBuild" />
+    <file src=".\bin\$configuration$\netstandard2.0\NXPorts*.dll" target="build\NETCOREMSBuild" />
     <file src=".\bin\$configuration$\netstandard2.0\dnlib.dll" target="build\NETCOREMSBuild" />
   </files>
 </package>

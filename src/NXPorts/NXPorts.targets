@@ -1,6 +1,0 @@
-﻿<Project>
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\NXPorts.Core.dll" TaskName="NXPorts.Core.AssemblyExportWriterTask" />
-  <Target Name="WriteExports">
-    <AssemblyExportWriterTask InputAssembly="%(IntermediateAssembly.Identity)" OutputPath="%(IntermediateAssembly.Identity).exported.dll" />
-  </Target>
-</Project>
