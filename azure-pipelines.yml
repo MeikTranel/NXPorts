@@ -14,3 +14,9 @@ steps:
     command: push
     feedPublish: 'NXPorts/Canary'
     searchPatternPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: 'tests/**/*.csproj'
+    arguments: '--collect:"Code Coverage"'
