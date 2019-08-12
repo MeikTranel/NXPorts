@@ -15,6 +15,7 @@ steps:
     command: 'test'
     configuration: ${{ parameters.buildConfiguration }}
     buildProperties: 'BuildType=${{ parameters.BuildType }}'
+    arguments: '--collect "Code coverage"'
     publishTestResults: true
   displayName: 'Test'
 
