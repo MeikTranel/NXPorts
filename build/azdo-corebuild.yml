@@ -14,10 +14,15 @@ steps:
   inputs:
     command: 'test'
     configuration: ${{ parameters.buildConfiguration }}
-    buildProperties: 'BuildType=${{ parameters.BuildType }}'
-    arguments: '--collect "Code coverage"'
+    buildProperties: 'BuildType=${{ parameters.BuildType }};EnableCoverage=true'
     publishTestResults: true
   displayName: 'Test'
+
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: 'cobertura'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/tests/**/coverage.cobertura.xml'
+  displayName: 'Publish coverage results'
 
 - task: DotNetCoreCLI@2
   inputs:
