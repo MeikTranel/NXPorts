@@ -12,5 +12,5 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: push
-    feedPublish: 'NXPorts-Nightly'
+    feedPublish: 'NXPorts/Canary'
     searchPatternPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
