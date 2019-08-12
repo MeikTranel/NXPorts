@@ -14,7 +14,7 @@ steps:
   inputs:
     command: 'test'
     configuration: ${{ parameters.buildConfiguration }}
-    arguments: '/p:BuildType="${{ parameters.BuildType }}";EnableCoverage="true"'
+    arguments: '/p:BuildType="${{ parameters.BuildType }}";EnableCoverage="true" --collect:"Code Coverage"'
     publishTestResults: true
   displayName: 'Test'
 
