@@ -15,14 +15,8 @@ steps:
     command: 'test'
     configuration: ${{ parameters.buildConfiguration }}
     buildProperties: 'BuildType=${{ parameters.BuildType }}'
+    publishTestResults: true
   displayName: 'Test'
-
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: VSTest
-    testResultsFiles: '**/*.trx'
-    failTaskOnFailedTests: true
-  displayName: 'Publish test results'
 
 - task: DotNetCoreCLI@2
   inputs:
