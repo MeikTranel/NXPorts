@@ -3,6 +3,13 @@
 A MSBuild-integrated library/tool to expose entrypoints in .NET assemblies to the platform invocation system or short `PInvoke`.
 It allows you to build .NET libraries that can be called from any development platform that supports `PInvoke`, including **C++**, **C**, **Rust**, **Delphi**, **Python** and so on...
 
+## Status
+
+| Channel | Build | Package |
+|---------|-------|---------|
+| Canary  |[![Build Status](https://dev.azure.com/tranelmeik/NXPorts/_apis/build/status/Canary%20Builds?branchName=master)](https://dev.azure.com/tranelmeik/NXPorts/_build/latest?definitionId=3&branchName=master)|         |
+| Release |[![Build Status](https://dev.azure.com/tranelmeik/NXPorts/_apis/build/status/Releases?branchName=master)](https://dev.azure.com/tranelmeik/NXPorts/_build/latest?definitionId=2&branchName=master)|         |
+
 ## Getting Started
 
 To get started you only have to add the `NXPorts` package to your project. That's it. `NXPorts` will automatically generate exports as

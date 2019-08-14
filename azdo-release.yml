@@ -13,6 +13,12 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: push
+    feedPublish: 'NXPorts/Canary'
+    searchPatternPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: push
     searchPatternPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
     nuGetFeedType: 'external'
     publishFeedCredentials: 'NuGetGallery'
