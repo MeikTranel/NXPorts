@@ -1,3 +1,5 @@
+name: 'NXPorts Release Pipeline'
+
 trigger:
   tags:
     include:

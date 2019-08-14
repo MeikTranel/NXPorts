@@ -1,3 +1,5 @@
+name: 'NXPorts Canary Pipeline'
+
 trigger:
   - master
   - releases/*
