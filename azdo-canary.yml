@@ -8,7 +8,7 @@ pool:
 steps:
 - template: build/azdo-corebuild.yml
   parameters:
-    buildType: 'canary'
+    BuildType: 'canary'
 
 - task: DotNetCoreCLI@2
   inputs:

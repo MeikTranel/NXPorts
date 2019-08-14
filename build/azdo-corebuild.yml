@@ -1,5 +1,5 @@
 parameters:
-  buildConfiguration: 'Release'
+  BuildConfiguration: 'Release'
   BuildType: ''
 
 steps:
@@ -13,8 +13,8 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
-    configuration: ${{ parameters.buildConfiguration }}
-    arguments: '/p:BuildType="${{ parameters.BuildType }}";EnableCoverage="true"'
+    configuration: ${{ parameters.BuildConfiguration }}
+    arguments: '-p:BuildType=${{ parameters.BuildType }};EnableCoverage=true'
     publishTestResults: true
   displayName: 'Test'
 

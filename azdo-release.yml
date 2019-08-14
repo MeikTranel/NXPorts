@@ -8,7 +8,7 @@ pool:
 steps:
 - template: build/azdo-corebuild.yml
   parameters:
-    buildType: 'release'
+    BuildType: 'release'
 
 - task: DotNetCoreCLI@2
   inputs:
