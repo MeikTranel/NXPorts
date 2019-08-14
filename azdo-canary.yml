@@ -1,5 +1,6 @@
 trigger:
   - master
+  - releases/*
 
 pool:
   vmImage: 'windows-2019'
@@ -7,7 +8,7 @@ pool:
 steps:
 - template: build/azdo-corebuild.yml
   parameters:
-    buildType: 'prerelease'
+    buildType: 'canary'
 
 - task: DotNetCoreCLI@2
   inputs:

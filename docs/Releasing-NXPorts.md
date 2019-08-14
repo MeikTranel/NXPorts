@@ -7,7 +7,6 @@ human element that initiates this process.
 ## Fundamentals
 
 - We're releasing to production from `tag` builds
-- We're releasing preview builds from `release/vX.XX.XX` branch builds
 - We're not releasing anything from `master` branch builds
 
 ## Checklist
@@ -19,12 +18,13 @@ human element that initiates this process.
   - [ ] List all closed issues in this release
   - [ ] List all contributors who helped with this release
 - [ ] Wait for all changes including documentation to be built
-  - [ ] Automated tests succeed on all operating systems
+  - [ ] Automated tests succeed on all supported platforms
   - [ ] Manual testing on the prerelease build
-- [ ] Tag **HEAD** of `release/vNext` with vNext
+- [ ] Tag the commit we want to release as `vNext`
 - [ ] Move contents of the current [Changelog](../CHANGELOG.MD) to the [Release Notes Archive](./ReleaseNotes.md)
-- [ ] Merge `release/vNext` into `master`
+- [ ] Rebase `master` onto `release/vNext`
 - [ ] Push `vNext` tag as well as `master` branch changes
+- [ ] Remove `release/vNext` branch
 
 ## Glossary
 

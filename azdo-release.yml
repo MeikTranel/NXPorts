@@ -1,0 +1,19 @@
+trigger:
+  tags:
+    include:
+    - 'v*'
+pool:
+  vmImage: 'windows-2019'
+
+steps:
+- template: build/azdo-corebuild.yml
+  parameters:
+    buildType: 'release'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: push
+    searchPatternPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'NuGetGallery'
+  displayName: 'Publish to NuGet.org'
