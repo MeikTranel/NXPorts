@@ -24,4 +24,5 @@ steps:
     configuration: ${{ parameters.buildConfiguration }}
     arguments: '/p:BuildType="${{ parameters.BuildType }}"'
     outputDir: $(Build.ArtifactStagingDirectory)
+    verbosityPack: Minimal
   displayName: 'Package NuGets'
