@@ -14,7 +14,8 @@ steps:
   inputs:
     command: 'test'
     configuration: ${{ parameters.BuildConfiguration }}
-    arguments: '-p:BuildType=${{ parameters.BuildType }};EnableCoverage=true'
+    buildProperties: 'BuildType=${{ parameters.BuildType }}'
+    arguments: '-p:EnableCoverage=true'
     publishTestResults: true
   displayName: 'Test'
 
@@ -22,7 +23,7 @@ steps:
   inputs:
     command: 'pack'
     configuration: ${{ parameters.buildConfiguration }}
-    arguments: '-p:BuildType=${{ parameters.BuildType }}'
+    buildProperties: 'BuildType=${{ parameters.BuildType }}'
     outputDir: $(Build.ArtifactStagingDirectory)
     verbosityPack: Minimal
   displayName: 'Package NuGets'
