@@ -32,13 +32,19 @@ public static class Exports {
 
 ## Building from Source
 
-To produce binaries and packages locally you just have to execute the cake script by calling the bootstrapper of your choice:
+To build packages by yourself all you have to do is the dotnet cli like this:
 
 ```shell
-  build.ps1
+  dotnet pack
 ```
 
-This will restore, run tests and pack all packages. More information about the release process can be found [here](./docs/Releasing-NXPorts.md).
+This will restore, build and pack all available projects. Testing this project is just as simple:
+
+```shell
+  dotnet test
+```
+
+More information about the release process can be found [here](./docs/Releasing-NXPorts.md).
 
 ## Contributing
 
