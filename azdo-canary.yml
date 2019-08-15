@@ -14,4 +14,4 @@ steps:
   inputs:
     command: push
     feedPublish: 'NXPorts/Canary'
-    searchPatternPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    searchPatternPush: '$(Build.ArtifactStagingDirectory)/packages/*.nupkg'

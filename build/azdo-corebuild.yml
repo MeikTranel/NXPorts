@@ -24,6 +24,11 @@ steps:
     command: 'pack'
     configuration: ${{ parameters.buildConfiguration }}
     buildProperties: 'BuildType=${{ parameters.BuildType }}'
-    outputDir: $(Build.ArtifactStagingDirectory)
+    outputDir: '$(Build.ArtifactStagingDirectory)/packages'
     verbosityPack: Minimal
   displayName: 'Package NuGets'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/packages'
+    ArtifactName: 'Packages'
