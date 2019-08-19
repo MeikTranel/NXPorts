@@ -4,7 +4,7 @@
     <Title>NXPorts</Title>
     <Description>A utility library to add export functions to the output dll on build.</Description>
     <Authors>Meik Tranel</Authors>
-    <VersionPrefix>0.1-pre</VersionPrefix>
+    <Version>0.1-pre</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
@@ -20,10 +20,12 @@
       Establish the following kinds of builds:
         - dev
         - canary
-        - release
+        - tagged
       These types shall be used to tweak the build further
       based on the type of build we are initiating.
     -->
     <BuildType>dev</BuildType>
   </PropertyGroup>
+
+  <Import Project="./build/azdo.props" />
 </Project>

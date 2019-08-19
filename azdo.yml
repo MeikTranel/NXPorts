@@ -1,6 +1,22 @@
-parameters:
-  BuildConfiguration: 'Release'
-  BuildType: ''
+trigger:
+  branches:
+    include:
+      - master
+      - rel/*
+  tags:
+    include:
+    - 'v*'
+pr:
+  branches:
+    include:
+      - master
+      - rel/*
+
+pool:
+  vmImage: 'windows-2019'
+
+variables:
+  BuildConfiguration: Release
 
 steps:
 - task: UseDotNet@2
@@ -13,8 +29,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
-    configuration: ${{ parameters.BuildConfiguration }}
-    buildProperties: 'BuildType=${{ parameters.BuildType }}'
+    configuration: $(BuildConfiguration)
     arguments: '-p:EnableCoverage=true'
     publishTestResults: true
   displayName: 'Test'
@@ -22,8 +37,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'pack'
-    configuration: ${{ parameters.buildConfiguration }}
-    buildProperties: 'BuildType=${{ parameters.BuildType }}'
+    configuration: $(BuildConfiguration)
     outputDir: '$(Build.ArtifactStagingDirectory)/packages'
     verbosityPack: Minimal
   displayName: 'Package NuGets'
