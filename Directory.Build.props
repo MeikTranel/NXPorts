@@ -5,6 +5,7 @@
     <Description>A utility library to add export functions to the output dll on build.</Description>
     <Authors>Meik Tranel</Authors>
     <Version>0.1-pre</Version>
+    <PackageTags>pinvoke;native;vtable;capi;dllexport</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
