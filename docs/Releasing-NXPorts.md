@@ -21,7 +21,6 @@ human element that initiates this process.
   - [ ] Automated tests succeed on all supported platforms
   - [ ] Manual testing on the prerelease build
 - [ ] Tag the commit we want to release as `vNext`
-- [ ] Move contents of the current [Changelog](../CHANGELOG.MD) to the [Release Notes Archive](./ReleaseNotes.md)
 - [ ] Rebase `master` onto `release/vNext`
 - [ ] Push `vNext` tag as well as `master` branch changes
 - [ ] Remove `release/vNext` branch

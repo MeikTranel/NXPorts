@@ -53,3 +53,8 @@ steps:
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)/packages'
     ArtifactName: 'Packages'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: './CHANGELOG.md'
+    ArtifactName: 'ReleaseNotes'
