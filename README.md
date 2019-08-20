@@ -1,14 +1,10 @@
 # NXPorts
 
+[![Build Status](https://dev.azure.com/tranelmeik/NXPorts/_apis/build/status/NXPorts%20CI?branchName=master)](https://dev.azure.com/tranelmeik/NXPorts/_build/latest?definitionId=4&branchName=master)
+[![NuGet Gallery Release](https://img.shields.io/nuget/v/NXPorts.svg)](https://www.nuget.org/packages/NXPorts/)
+
 A MSBuild-integrated library/tool to expose entrypoints in .NET assemblies to the platform invocation system or short `PInvoke`.
 It allows you to build .NET libraries that can be called from any development platform that supports `PInvoke`, including **C++**, **C**, **Rust**, **Delphi**, **Python** and so on...
-
-## Status
-
-| Channel | Build | Package |
-|---------|-------|---------|
-| Canary  |[![Build Status](https://dev.azure.com/tranelmeik/NXPorts/_apis/build/status/Canary%20Builds?branchName=master)](https://dev.azure.com/tranelmeik/NXPorts/_build/latest?definitionId=3&branchName=master)|         |
-| Release |[![Build Status](https://dev.azure.com/tranelmeik/NXPorts/_apis/build/status/Releases?branchName=master)](https://dev.azure.com/tranelmeik/NXPorts/_build/latest?definitionId=2&branchName=master)|         |
 
 ## Getting Started
 
