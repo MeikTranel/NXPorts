@@ -5,14 +5,16 @@
     <Description>A utility library to add export functions to the output dll on build.</Description>
     <Authors>Meik Tranel</Authors>
     <Version>0.1-pre</Version>
-    <PackageTags>pinvoke;native;vtable;capi;dllexport</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/meiktranel/nxports</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/meiktranel/nxports.git</RepositoryUrl>
   </PropertyGroup>
 
   <!-- CSProj/Build related settings -->
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <DebugType>embedded</DebugType>
+    <EnableSourceLink>true</EnableSourceLink>
   </PropertyGroup>
 
   <!-- Customization -->

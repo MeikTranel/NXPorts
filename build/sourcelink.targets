@@ -1,0 +1,16 @@
+<Project>
+  <!-- SourceLink Support -->
+  <Choose>
+    <When Condition=" '$(EnableSourceLink)'=='true' ">
+      <PropertyGroup>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+        <!-- Embed designtime only files like AssemblyInfo.generated.cs and such (always +1 open source more than thou) -->
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+      </PropertyGroup>
+      <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.Github" Version="1.0.0-beta2-19367-01" PrivateAssets="All" />
+      </ItemGroup>
+    </When>
+  </Choose>
+</Project>

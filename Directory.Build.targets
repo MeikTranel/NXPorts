@@ -1,25 +1,5 @@
-<Project InitialTargets="InitializeVersion">
-  <Target Name="AttachDevVersionSuffix" Condition="'$(BuildType)' == 'dev'">
-    <CreateProperty Value="$(Version)-$([System.DateTime]::Now.ToString(yyyyMMdd-hhmmss))">
-      <Output TaskParameter="Value" PropertyName="CalculatedVersion" />
-    </CreateProperty>
-  </Target>
-
-  <Target Name="AttachCanarySuffix" Condition="'$(BuildType)' == 'canary'" >
-    <Exec Command="git rev-parse HEAD" EchoOff="true" ConsoleToMSBuild="true" StandardOutputImportance="low">
-      <Output TaskParameter="ConsoleOutput" PropertyName="CurrentHEAD" />
-    </Exec>
-    <CreateProperty Value="$(Version)-$(CurrentHEAD)">
-      <Output TaskParameter="Value" PropertyName="CalculatedVersion" />
-    </CreateProperty>
-  </Target>
-
-  <Target Name="InitializeVersion" DependsOnTargets="AttachDevVersionSuffix;AttachCanarySuffix" Condition="'$(BuildType)' != 'tagged'">
-    <CreateProperty Value="$(CalculatedVersion)">
-      <Output TaskParameter="Value" PropertyName="Version" />
-      <Output TaskParameter="Value" PropertyName="PackageVersion" />
-    </CreateProperty>
-  </Target>
-
+<Project>
   <Import Project="./build/azdo.targets" />
+  <Import Project="./build/versioning.targets" />
+  <Import Project="./build/sourcelink.targets" />
 </Project>

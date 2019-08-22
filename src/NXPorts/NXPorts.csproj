@@ -30,6 +30,9 @@
     <NuspecProperties>$(NuspecProperties);authors=$(Authors)</NuspecProperties>
     <NuspecProperties>$(NuspecProperties);licenseExp=$(PackageLicenseExpression)</NuspecProperties>
     <NuspecProperties>$(NuspecProperties);configuration=$(Configuration)</NuspecProperties>
+    <NuspecProperties>$(NuspecProperties);projectUrl=$(PackageProjectUrl)</NuspecProperties>
+    <NuspecProperties>$(NuspecProperties);repositoryUrl=$(RepositoryUrl)</NuspecProperties>
+    <NuspecProperties>$(NuspecProperties);commitHash=$(RepositoryCommit)</NuspecProperties>
   </PropertyGroup>
   </Target>
 

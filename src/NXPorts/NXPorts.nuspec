@@ -6,6 +6,8 @@
     <authors>$authors$</authors>
     <description>$description$</description>
     <license type="expression">$licenseExp$</license>
+    <projectUrl>$projectUrl$</projectUrl>
+    <repository type="git" url="$repositoryUrl$" commit="$commitHash$" />
   </metadata>
   <dependencies/>
   <files>
