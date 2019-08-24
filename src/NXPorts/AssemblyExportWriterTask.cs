@@ -4,6 +4,7 @@ using dnlib.DotNet.Writer;
 using dnlib.PE;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using NXPorts.Attributes;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -23,17 +24,10 @@ namespace NXPorts
 
         public override bool Execute()
         {
-            try
+            using (var expAttributedAssembly = new ExportAttributedAssembly(InputAssembly))
             {
-                using (var expAttributedAssembly = new ExportAttributedAssembly(InputAssembly))
-                {
-                    Write(expAttributedAssembly, OutputPath);
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
+                Write(expAttributedAssembly, OutputPath);                    
+                return Log.HasLoggedErrors;
             }
         }
 
@@ -55,6 +49,7 @@ namespace NXPorts
                         ),
                         returnType
                     );
+                    exportDefinition.MethodDefinition.CustomAttributes.RemoveAll(typeof(ExportAttribute).FullName);
                 }
                 RemoveToxicDebuggableAttribute(sourceAssembly.Module);
 
