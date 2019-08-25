@@ -17,5 +17,7 @@
     <file src=".\bin\$configuration$\net46\dnlib.dll" target="build\NETFXMSBuild" />
     <file src=".\bin\$configuration$\netstandard2.0\NXPorts*.dll" target="build\NETCOREMSBuild" />
     <file src=".\bin\$configuration$\netstandard2.0\dnlib.dll" target="build\NETCOREMSBuild" />
+    <!-- DNLib MIT License Notice -->
+    <file src="..\..\docs\legal\DNLib-License.txt" target="DNLib-License.txt" />
   </files>
 </package>
