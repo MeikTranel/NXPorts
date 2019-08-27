@@ -6,12 +6,11 @@ human element that initiates this process.
 
 ## Fundamentals
 
-- We're releasing to production from `tag` builds
-- We're not releasing anything from `master` branch builds
+- We're releasing to ``production`` (as in NuGet Gallery) from `tag` builds
+- We're releasing canary builds from master to our canary feed
 
 ## Checklist
 
-- [ ] Create `release/vNext` branch
 - [ ] Verify correct version in [Global Properties](../Directory.Build.props) to `vNext`
 - [ ] Verify that the [Changelog](../CHANGELOG.MD) does not contain any changes from `vCurrent`
 - [ ] Check if all changes were listed in the [Changelog](../CHANGELOG.MD)
@@ -21,9 +20,7 @@ human element that initiates this process.
   - [ ] Automated tests succeed on all supported platforms
   - [ ] Manual testing on the prerelease build
 - [ ] Tag the commit we want to release as `vNext`
-- [ ] Rebase `master` onto `release/vNext`
 - [ ] Push `vNext` tag as well as `master` branch changes
-- [ ] Remove `release/vNext` branch
 
 ## Glossary
 

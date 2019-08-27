@@ -19,13 +19,15 @@ This software itself will run on any system that supports developing .NET softwa
 Keep in mind that `Reverse PInvoke` - calling PInvoke entrypoints **in .NET assemblies** - is only officially supported
 in the .NET Framework. It may work in other runtimes as well, but your mileage may vary.
 
+See [Compatibility Docs](./docs/Compatibility.md) for more info.
+
 ### Sample
 
 The following code will result in an exported function named `SampleExportFunc`.
 
 ```CSharp
 public static class Exports {
-  [NXPorts.Attributes.Export(alias:"SampleExportFunc")]
+  [Export(alias:"SampleExportFunc")]
   public static double Add(double a, double b)
   {
       return a + b;
