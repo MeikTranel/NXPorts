@@ -10,3 +10,6 @@
 # CSProj output directories
 [Bb]in/
 [Oo]bj/
+
+# Local nuget package cache
+packages/

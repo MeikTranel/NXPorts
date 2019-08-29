@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.779
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NETFX-OldCSProj", "NETFX-OldCSProj\NETFX-OldCSProj.csproj", "{38F79E16-3E71-4F94-B40A-702F08FA1BAE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NETFX_SDKCSProj", "NETFX_SDKCSProj\NETFX_SDKCSProj.csproj", "{8455CC6F-55F8-4F30-B212-69075074FF31}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{38F79E16-3E71-4F94-B40A-702F08FA1BAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38F79E16-3E71-4F94-B40A-702F08FA1BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38F79E16-3E71-4F94-B40A-702F08FA1BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38F79E16-3E71-4F94-B40A-702F08FA1BAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8455CC6F-55F8-4F30-B212-69075074FF31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8455CC6F-55F8-4F30-B212-69075074FF31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8455CC6F-55F8-4F30-B212-69075074FF31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8455CC6F-55F8-4F30-B212-69075074FF31}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1D6E3BAC-A8F8-489E-9804-B3802A692D49}
+	EndGlobalSection
+EndGlobal
