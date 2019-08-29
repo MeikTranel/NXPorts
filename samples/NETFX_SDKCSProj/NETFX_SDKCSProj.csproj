@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net45</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NXPorts" Version="0.1.0-pre-fa9fc3fd3c0c72d14871f828ec547574aac6d126" />
+  </ItemGroup>
+</Project>

@@ -9,7 +9,7 @@ It allows you to build .NET libraries that can be called from any development pl
 ## Getting Started
 
 To get started you only have to add the `NXPorts` package to your project. That's it. `NXPorts` will automatically generate exports as
-part of your build now.
+part of your build now. Some samples are available [here](./samples).
 
 ### Prerequisites
 
