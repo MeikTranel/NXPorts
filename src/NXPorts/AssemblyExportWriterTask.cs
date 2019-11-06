@@ -27,7 +27,7 @@ namespace NXPorts
             using (var expAttributedAssembly = new ExportAttributedAssembly(InputAssembly))
             {
                 Write(expAttributedAssembly, OutputPath);                    
-                return Log.HasLoggedErrors;
+                return !Log.HasLoggedErrors;
             }
         }
 
