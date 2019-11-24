@@ -1,6 +1,6 @@
 <Project InitialTargets="InitializeVersion">
   <Target Name="AttachDevVersionSuffix" Condition="'$(BuildType)' == 'dev'">
-    <CreateProperty Value="$(Version)-$([System.DateTime]::Now.ToString(yyyyMMdd-hhmmss))">
+    <CreateProperty Value="$(Version)+d.$([System.DateTime]::Now.ToString(yyyyMMdd.hhmmss))">
       <Output TaskParameter="Value" PropertyName="CalculatedVersion" />
     </CreateProperty>
   </Target>
@@ -9,7 +9,7 @@
     <Exec Command="git rev-parse HEAD" EchoOff="true" ConsoleToMSBuild="true" StandardOutputImportance="low">
       <Output TaskParameter="ConsoleOutput" PropertyName="CurrentHEAD" />
     </Exec>
-    <CreateProperty Value="$(Version)-$(CurrentHEAD)">
+    <CreateProperty Value="$(Version)+$(CurrentHEAD)">
       <Output TaskParameter="Value" PropertyName="CalculatedVersion" />
     </CreateProperty>
   </Target>
