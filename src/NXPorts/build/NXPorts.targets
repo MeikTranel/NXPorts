@@ -1,11 +1,10 @@
 ﻿<Project>
-  <PropertyGroup>
-    <NXPortsTaskAssembly Condition=" '$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)\NETCOREMSBuild\NXPorts.dll</NXPortsTaskAssembly>
-    <NXPortsTaskAssembly Condition=" '$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)\NETFXMSBuild\NXPorts.dll</NXPortsTaskAssembly>
+  <PropertyGroup Condition="'$(NXPortsTaskAssemblyDirectory)' == ''">
+    <NXPortsTaskAssemblyDirectory Condition=" '$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)\NETFXMSBuild\</NXPortsTaskAssemblyDirectory>
+    <NXPortsTaskAssemblyDirectory Condition=" '$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)\NETCOREMSBuild\</NXPortsTaskAssemblyDirectory>
   </PropertyGroup>
-  
-  <UsingTask AssemblyFile="$(NXPortsTaskAssembly)" TaskName="NXPorts.AssemblyExportWriterTask" />
-  <Target Name="WriteExports" AfterTargets="CoreCompile">
+  <UsingTask AssemblyFile="$(NXPortsTaskAssemblyDirectory)NXPorts.dll" TaskName="NXPorts.AssemblyExportWriterTask" />
+  <Target Name="WriteExports" AfterTargets="CoreCompile" Condition="'$(DesignTimeBuild)' != true">
     <AssemblyExportWriterTask InputAssembly="%(IntermediateAssembly.Identity)" OutputPath="%(IntermediateAssembly.Identity)" />
   </Target>
 </Project>

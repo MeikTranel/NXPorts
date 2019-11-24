@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Build.Utilities.ProjectCreation;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NXPorts.Attributes;
 
 namespace NXPorts.Tests.Infrastructure
 {
@@ -15,7 +17,7 @@ namespace NXPorts.Tests.Infrastructure
         public TestEnvironment()
         {
             var testPWD = Directory.CreateDirectory(
-                Path.Combine(Environment.CurrentDirectory, Guid.NewGuid().ToString("n").Substring(0, 8))
+                Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())
             );
             Environment.CurrentDirectory = testPWD.FullName;
         }
@@ -59,6 +61,31 @@ namespace NXPorts.Tests.Infrastructure
                 return CreateTestDLL(assemblyName, csharpDocuments, Platform.X64);
             else
                 return CreateTestDLL(assemblyName, csharpDocuments, Platform.X86);
+        }
+
+        public ProjectCreator SetupNXPortsProject(string projectFilePath = "./test.csproj", string targetFramework = "net48")
+        {
+            string dir = GetApplicationDirectory();
+            File.WriteAllText("Directory.Build.props", "<Project />");
+            File.WriteAllText("Directory.Build.targets", "<Project />");
+            return ProjectCreator.Templates.SdkCsproj(projectFilePath, targetFramework: targetFramework)
+                .Property("NXPortsTaskAssemblyDirectory", dir + "\\")
+                .ItemReference(new Uri(Assembly.GetAssembly(typeof(ExportAttribute)).CodeBase).LocalPath)
+                .Import(Path.Combine(dir, "Build", "NXPorts.targets"));
+        }
+
+        public void CopyFileFromTestFiles(string relativeTestFilesPath, string destinationPath)
+        {
+            File.Copy(Path.Combine(GetApplicationDirectory(), "TestFiles", relativeTestFilesPath), destinationPath);
+        }
+
+        public void CopyFileFromTestFiles(string relativeTestFilesPath)
+        {
+            CopyFileFromTestFiles(relativeTestFilesPath, relativeTestFilesPath);
+        }
+        private static string GetApplicationDirectory()
+        {
+            return new Uri(Path.GetDirectoryName(Assembly.GetAssembly(typeof(TestEnvironment)).CodeBase)).LocalPath;
         }
 
         /// <summary>

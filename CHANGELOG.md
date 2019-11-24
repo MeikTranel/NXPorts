@@ -3,3 +3,4 @@ This release and future minor releases will be focused on getting a initial desi
 Once we have a solid base, we will bump to v1 without any breaking changes from the last v0.X release.
 
 * #13 Fixed export writing task confusing success and failure (Thanks, @filmor)
+* #10 Fixed a bug where loading a NXPorts enabled project in designtime build mode (e.g. Visual Studio) would be blocked by a failing AssemblyExportWriterTask

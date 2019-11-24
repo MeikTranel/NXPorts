@@ -1,5 +1,4 @@
-﻿using NXPorts;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using NXPorts.Tests.Infrastructure;
 
