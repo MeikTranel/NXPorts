@@ -3,6 +3,7 @@ using Buildalyzer.Environment;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NXPorts.Tests.Infrastructure;
 using PeNet;
+using System.IO;
 
 namespace NXPorts.Tests
 {
@@ -47,6 +48,33 @@ namespace NXPorts.Tests
                 );
 
                 Assert.IsTrue(results.OverallSuccess);
+            }
+        }
+
+        [TestMethod]
+        public void The_attributes_assembly_file_does_not_end_up_in_the_build_output()
+        {
+            using (var testEnv = new TestEnvironment())
+            {
+                testEnv.SetupNXPortsProject("./sdknet48.csproj").Save();
+                testEnv.CopyFileFromTestFiles("Simple.cs");
+
+                var results = new AnalyzerManager().GetProject("./sdknet48.csproj").Build(
+                    new EnvironmentOptions()
+                    {
+                        DesignTime = false
+                    }
+                );
+                Assert.IsTrue(results.OverallSuccess);
+                if(results.TryGetTargetFramework("net48", out var net48results))
+                {
+                    Assert.IsFalse(
+                        File.Exists(Path.Combine(Path.GetDirectoryName(net48results.ProjectFilePath),"bin/debug/net48/NXPorts.Attributes.dll")),
+                        "NXPorts wasn't removed the from the build output."
+                    );
+                } else {
+                    Assert.Inconclusive("Failed to retrieve build results");
+                }
             }
         }
     }

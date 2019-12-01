@@ -6,5 +6,12 @@
   <UsingTask AssemblyFile="$(NXPortsTaskAssemblyDirectory)NXPorts.dll" TaskName="NXPorts.AssemblyExportWriterTask" />
   <Target Name="WriteExports" AfterTargets="CoreCompile" Condition="'$(DesignTimeBuild)' != true">
     <AssemblyExportWriterTask InputAssembly="%(IntermediateAssembly.Identity)" OutputPath="%(IntermediateAssembly.Identity)" />
+    <!--
+      Once the export has been written, we have removed all references to the Attributes assembly,
+      which means we don't need it anymore.
+    -->
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)%(Extension)' == 'NXPorts.Attributes.dll'" />
+    </ItemGroup>
   </Target>
 </Project>
