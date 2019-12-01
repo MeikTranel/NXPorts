@@ -1,5 +1,5 @@
 <package>
-  <metadata minClientVersion="2.5">
+  <metadata minClientVersion="4.3">
     <title>$title$</title>
     <id>$id$</id>
     <version>$version$</version>
