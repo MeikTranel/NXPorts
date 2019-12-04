@@ -69,19 +69,18 @@ namespace NXPorts
 
         public bool TryApproximateMethodSourcePosition(out SourcePosition sourcePosition)
         {
-            sourcePosition = new SourcePosition(String.Empty);
+            sourcePosition = null;
             var firstILInstruction = this.MethodDefinition.Body.Instructions.First();
             var sequencePoint = firstILInstruction.SequencePoint;
-            if (sequencePoint != null)
-                return false;
-            else
-            {
+            if (sequencePoint != null) {
                 sourcePosition = new SourcePosition(
                     filePath: sequencePoint.Document.Url,
                     line: sequencePoint.StartLine - 1,
                     column: sequencePoint.StartColumn
                 );
                 return true;
+            } else {
+                return false;
             }
         }
     }

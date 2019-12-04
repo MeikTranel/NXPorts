@@ -24,11 +24,19 @@ namespace NXPorts
 
         public override bool Execute()
         {
-            using (var expAttributedAssembly = new ExportAttributedAssembly(InputAssembly))
+            try
             {
-                Write(expAttributedAssembly, OutputPath);                    
-                return !Log.HasLoggedErrors;
+                using (var expAttributedAssembly = new ExportAttributedAssembly(InputAssembly))
+                {
+                    Log.LogMessage(MessageImportance.Normal, $"Found {expAttributedAssembly.ExportDefinitions.Count} annotated method(s) ready for reweaving.");
+                    Write(expAttributedAssembly, OutputPath);
+                }
             }
+            catch (Exception e)
+            {
+                Log.LogErrorFromException(e, true, true, null);
+            }
+            return !Log.HasLoggedErrors;
         }
 
         public void Write(ExportAttributedAssembly sourceAssembly, string outputPath)
@@ -40,6 +48,16 @@ namespace NXPorts
             {
                 foreach (var exportDefinition in sourceAssembly.ExportDefinitions)
                 {
+                    var message = $"Reweaving method '{exportDefinition.MethodDefinition.FullName}' with alias '{exportDefinition.Alias}' and calling convention '{exportDefinition.CallingConvention}'";
+                    if (exportDefinition.TryApproximateMethodSourcePosition(out var sourcePosition)) {
+                        Log.LogMessage(
+                            subcategory: null, code: null, helpKeyword: null,
+                            file: sourcePosition.FilePath, lineNumber: sourcePosition.Line ?? 0, columnNumber: sourcePosition.Column ?? 0, endLineNumber: 0, endColumnNumber: 0,
+                            MessageImportance.Low, message
+                        );
+                    } else {
+                        Log.LogMessage(MessageImportance.Low, message);
+                    }
                     var returnType = exportDefinition.MethodDefinition.MethodSig.RetType;
                     exportDefinition.MethodDefinition.ExportInfo = new MethodExportInfo(exportDefinition.Alias);
                     exportDefinition.MethodDefinition.MethodSig.RetType = new CModOptSig(
@@ -51,15 +69,17 @@ namespace NXPorts
                     );
                     exportDefinition.MethodDefinition.CustomAttributes.RemoveAll(typeof(ExportAttribute).FullName);
                 }
+                Log.LogMessage(MessageImportance.Low, "Clearing assembly of incompatible assembly flags.");
                 RemoveToxicDebuggableAttribute(sourceAssembly.Module);
-
+                Log.LogMessage(MessageImportance.Low, "Adjusting PE32 header to reflect the reweaving changes to the assembly file.");
                 var moduleWriterOptions = new ModuleWriterOptions(sourceAssembly.Module);
                 moduleWriterOptions.Cor20HeaderOptions.Flags = StrictenCor20HeaderFlags(moduleWriterOptions.Cor20HeaderOptions.Flags);
                 moduleWriterOptions.Cor20HeaderOptions.Flags &= ~ComImageFlags.ILOnly;
                 moduleWriterOptions.PEHeadersOptions.Characteristics |= Characteristics.Dll;
-
+                Log.LogMessage(MessageImportance.Low, "Writing the new assembly file to disk...");
                 sourceAssembly.Module.Write(outputStream, moduleWriterOptions);
             }
+            Log.LogMessage(MessageImportance.Normal, $"Successfully rewritten assembly at '{outputPath}'.");
         }
 
         private static void RemoveToxicDebuggableAttribute(ModuleDefMD module)

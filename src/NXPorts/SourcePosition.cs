@@ -1,3 +1,5 @@
+using System;
+
 namespace NXPorts
 {
     public class SourcePosition {
@@ -7,8 +9,8 @@ namespace NXPorts
 
         public SourcePosition(string filePath)
         {
-            if (string.IsNullOrEmpty(filePath))
-                throw new System.ArgumentException("message", nameof(filePath));
+            if (filePath == null)
+                throw new ArgumentNullException(nameof(filePath));
 
             this.FilePath = filePath;
         }

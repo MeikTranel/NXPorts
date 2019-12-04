@@ -1,4 +1,5 @@
 ﻿using dnlib.DotNet;
+using Microsoft.Build.Utilities.ProjectCreation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NXPorts.Tests.Infrastructure;
 using PeNet;
@@ -31,6 +32,7 @@ namespace NXPorts.Tests
                 using (var testExportAttributedAssembly = new ExportAttributedAssembly("./test.dll"))
                 {
                     var writer = new AssemblyExportWriterTask();
+                    writer.BuildEngine = BuildEngine.Create();
                     writer.Write(testExportAttributedAssembly, "./test.dll");
                 }
 
@@ -62,6 +64,7 @@ namespace NXPorts.Tests
                 using (var testExportAttributedAssembly = new ExportAttributedAssembly("./test.dll"))
                 {
                     var writer = new AssemblyExportWriterTask();
+                    writer.BuildEngine = BuildEngine.Create();
                     writer.Write(testExportAttributedAssembly, "./test.dll");
                 }
 
@@ -97,6 +100,7 @@ namespace NXPorts.Tests
                 using (var testExportAttributedAssembly = new ExportAttributedAssembly("./test.dll"))
                 {
                     var writer = new AssemblyExportWriterTask();
+                    writer.BuildEngine = BuildEngine.Create();
                     writer.Write(testExportAttributedAssembly, "./testOut.dll");
                 }
 

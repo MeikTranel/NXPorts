@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Buildalyzer;
+using Buildalyzer.Environment;
 using Microsoft.Build.Utilities.ProjectCreation;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -83,6 +85,27 @@ namespace NXPorts.Tests.Infrastructure
         {
             CopyFileFromTestFiles(relativeTestFilesPath, relativeTestFilesPath);
         }
+
+        public (AnalyzerResults AnalyzerResults, string log) Build(string projectFilePath, bool designTime = false)
+        {
+            using(var logWriter = new StringWriter())
+            {
+                var analyzerResults = new AnalyzerManager(
+                    new AnalyzerManagerOptions()
+                    {
+                        LogWriter = logWriter
+                    }
+                ).GetProject(projectFilePath).Build(
+                    new EnvironmentOptions()
+                    {
+                        DesignTime = designTime
+                    }
+                );
+                return (analyzerResults, logWriter.ToString());
+            }
+        }
+
+
         private static string GetApplicationDirectory()
         {
             return new Uri(Path.GetDirectoryName(Assembly.GetAssembly(typeof(TestEnvironment)).CodeBase)).LocalPath;

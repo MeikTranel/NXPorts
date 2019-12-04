@@ -18,14 +18,9 @@ namespace NXPorts.Tests
                 testEnv.SetupNXPortsProject("./sdknet48.csproj").Save();
                 testEnv.CopyFileFromTestFiles("Simple.cs");
 
-                var results = new AnalyzerManager().GetProject("./sdknet48.csproj").Build(
-                    new EnvironmentOptions()
-                    {
-                        DesignTime = false
-                    }
-                );
+                var results = testEnv.Build("./sdknet48.csproj");
+                Assert.IsTrue(results.AnalyzerResults.OverallSuccess, "The build failed.");
 
-                Assert.IsTrue(results.OverallSuccess);
                 var buildOutputFile = new PeFile("./bin/debug/net48/sdknet48.dll");
                 Assert.AreEqual(1, buildOutputFile.ExportedFunctions.Length, "There is more or less than one export function listed in the resulting dll.");
                 Assert.AreEqual("DoSomething", buildOutputFile.ExportedFunctions[0].Name);
@@ -40,14 +35,9 @@ namespace NXPorts.Tests
                 testEnv.SetupNXPortsProject("./sdknet48.csproj").Save();
                 testEnv.CopyFileFromTestFiles("Simple.cs");
 
-                var results = new AnalyzerManager().GetProject("./sdknet48.csproj").Build(
-                    new EnvironmentOptions()
-                    {
-                        DesignTime = true
-                    }
-                );
+                var results = testEnv.Build("./sdknet48.csproj", true);
 
-                Assert.IsTrue(results.OverallSuccess);
+                Assert.IsTrue(results.AnalyzerResults.OverallSuccess, "The designtime build failed.");
             }
         }
 
@@ -59,22 +49,20 @@ namespace NXPorts.Tests
                 testEnv.SetupNXPortsProject("./sdknet48.csproj").Save();
                 testEnv.CopyFileFromTestFiles("Simple.cs");
 
-                var results = new AnalyzerManager().GetProject("./sdknet48.csproj").Build(
-                    new EnvironmentOptions()
-                    {
-                        DesignTime = false
-                    }
-                );
-                Assert.IsTrue(results.OverallSuccess);
-                if(results.TryGetTargetFramework("net48", out var net48results))
+                var results = testEnv.Build("./sdknet48.csproj");
+                Assert.IsTrue(results.AnalyzerResults.OverallSuccess, "The build failed.");
+                if (results.AnalyzerResults.TryGetTargetFramework("net48", out var net48results))
                 {
                     Assert.IsFalse(
-                        File.Exists(Path.Combine(Path.GetDirectoryName(net48results.ProjectFilePath),"bin/debug/net48/NXPorts.Attributes.dll")),
+                        File.Exists(Path.Combine(Path.GetDirectoryName(net48results.ProjectFilePath), "bin/debug/net48/NXPorts.Attributes.dll")),
                         "NXPorts wasn't removed the from the build output."
                     );
-                } else {
+                }
+                else
+                {
                     Assert.Inconclusive("Failed to retrieve build results");
                 }
+                
             }
         }
     }
