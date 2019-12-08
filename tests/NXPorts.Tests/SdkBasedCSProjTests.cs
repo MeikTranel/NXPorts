@@ -1,6 +1,4 @@
-﻿using Buildalyzer;
-using Buildalyzer.Environment;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NXPorts.Tests.Infrastructure;
 using PeNet;
 using System.IO;
@@ -19,11 +17,18 @@ namespace NXPorts.Tests
                 testEnv.CopyFileFromTestFiles("Simple.cs");
 
                 var results = testEnv.Build("./sdknet48.csproj");
-                Assert.IsTrue(results.AnalyzerResults.OverallSuccess, "The build failed.");
 
-                var buildOutputFile = new PeFile("./bin/debug/net48/sdknet48.dll");
-                Assert.AreEqual(1, buildOutputFile.ExportedFunctions.Length, "There is more or less than one export function listed in the resulting dll.");
-                Assert.AreEqual("DoSomething", buildOutputFile.ExportedFunctions[0].Name);
+                Assert.IsTrue(results.AnalyzerResults.OverallSuccess, "The build failed.");
+                if (results.AnalyzerResults.TryGetTargetFramework("net48", out var net48results))
+                {
+                    var buildOutputFile = new PeFile(net48results.Properties["TargetPath"]);
+                    Assert.AreEqual(1, buildOutputFile.ExportedFunctions.Length, "There is more or less than one export function listed in the resulting dll.");
+                    Assert.AreEqual("DoSomething", buildOutputFile.ExportedFunctions[0].Name);
+                }
+                else
+                {
+                    Assert.Inconclusive("Failed to retrieve build results");
+                }
             }
         }
 
@@ -54,7 +59,7 @@ namespace NXPorts.Tests
                 if (results.AnalyzerResults.TryGetTargetFramework("net48", out var net48results))
                 {
                     Assert.IsFalse(
-                        File.Exists(Path.Combine(Path.GetDirectoryName(net48results.ProjectFilePath), "bin/debug/net48/NXPorts.Attributes.dll")),
+                        File.Exists(Path.Combine(Path.GetDirectoryName(net48results.Properties["TargetDir"]), "NXPorts.Attributes.dll")),
                         "NXPorts wasn't removed the from the build output."
                     );
                 }
