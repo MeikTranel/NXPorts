@@ -26,5 +26,5 @@ jobs:
     - name: Add GPR Source
       run: nuget source Add -Name "GitHub" -Source "https://nuget.pkg.github.com/MeikTranel/index.json" -UserName MeikTranel -Password ${{ secrets.GITHUB_TOKEN }}
     - name: Push to GPR
-      run: Get-ChildItem -Path out/packages -Filter *.nupkg | %{ dotnet nuget push $_.FullName -Source "GPR" }
+      run: Get-ChildItem -Path out/packages -Filter *.nupkg | %{ nuget push $_.FullName -Source "GPR" }
       shell: pwsh
