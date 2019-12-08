@@ -1,6 +1,8 @@
-name: Release
+name: Deploy Release
 
-on: [create]
+on:
+  release:
+    types: [published]
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
@@ -21,10 +23,13 @@ jobs:
       with:
         name: Packages
         path: out/packages
-    - name: Setup NuGet.exe (Path etc.)
+    - name: Setup NuGet.exe
       uses: NuGet/setup-nuget@v1.0.2
     - name: Add GPR Source
-      run: nuget source Add -Name "GitHub" -Source "https://nuget.pkg.github.com/MeikTranel/index.json" -UserName MeikTranel -Password ${{ secrets.GITHUB_TOKEN }}
+      run: nuget source Add -Name "GPR" -Source "https://nuget.pkg.github.com/MeikTranel/index.json" -UserName MeikTranel -Password ${{ secrets.GITHUB_TOKEN }}
     - name: Push to GPR
       run: Get-ChildItem -Path out/packages -Filter *.nupkg | %{ nuget push $_.FullName -Source "GPR" }
+      shell: pwsh
+    - name: Push to NuGet Gallery
+      run: Get-ChildItem -Path out/packages -Filter *.nupkg | %{ dotnet nuget push $_.FullName -k ${{ secrets.NUGETGALLERY_NXPORTS_SECRET }} -s https://api.nuget.org/v3/index.json }
       shell: pwsh
