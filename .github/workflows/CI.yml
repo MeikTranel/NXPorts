@@ -8,8 +8,6 @@ on:
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  BuildType: canary
-  ContinuousIntegrationBuild: true
 
 jobs:
   build:
@@ -21,9 +19,9 @@ jobs:
       with:
         version: 2.2.301
     - name: Test
-      run: dotnet test -c Release -p:EnableCoverage=true --logger:"console;verbosity=normal"
+      run: dotnet test -c Release -p:EnableCoverage=true --logger:"console;verbosity=normal" -p:ContinuousIntegrationBuild=true -p:BuildType=canary
     - name: Pack
-      run: dotnet pack -c Release -p:PackageOutputPath="$env:GITHUB_WORKSPACE/out/packages"
+      run: dotnet pack -c Release -p:PackageOutputPath="$env:GITHUB_WORKSPACE/out/packages" -p:ContinuousIntegrationBuild=true -p:BuildType=canary
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:

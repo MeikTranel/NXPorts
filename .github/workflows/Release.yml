@@ -4,8 +4,6 @@ on: [create]
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  BuildType: tagged
-  ContinuousIntegrationBuild: true
 
 jobs:
   build:
@@ -17,7 +15,7 @@ jobs:
       with:
         version: 2.2.301
     - name: Pack
-      run: dotnet pack -c Release -p:PackageOutputPath="$env:GITHUB_WORKSPACE/out/packages"
+      run: dotnet pack -c Release -p:PackageOutputPath="$env:GITHUB_WORKSPACE/out/packages" -p:ContinuousIntegrationBuild=true -p:BuildType=tagged
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
