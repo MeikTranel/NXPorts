@@ -1,14 +1,10 @@
-name: CI
+name: Release
 
-on:
-  pull_request:
-  push:
-    branches:
-    - master
+on: [create]
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  BuildType: canary
+  BuildType: tagged
   ContinuousIntegrationBuild: true
 
 jobs:
@@ -20,8 +16,6 @@ jobs:
       uses: actions/setup-dotnet@v1.0.0
       with:
         version: 2.2.301
-    - name: Test
-      run: dotnet test -c Release -p:EnableCoverage=true --logger:"console;verbosity=normal"
     - name: Pack
       run: dotnet pack -c Release -p:PackageOutputPath="$env:GITHUB_WORKSPACE/out/packages"
     - name: Upload artifact
@@ -29,3 +23,8 @@ jobs:
       with:
         name: Packages
         path: out/packages
+    - name: Add GPR Source
+      run: nuget source Add -Name "GitHub" -Source "https://nuget.pkg.github.com/MeikTranel/index.json" -UserName MeikTranel -Password ${{ secrets.GITHUB_TOKEN }}
+    - name: Push to GPR
+      run: Get-ChildItem -Path out/packages -Filter *.nupkg | %{ dotnet nuget push $_.FullName -Source "GPR" }
+      shell: pwsh

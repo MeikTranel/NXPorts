@@ -5,6 +5,7 @@ root = true
 indent_style = space
 end_of_line = crlf
 insert_final_newline = false
+trim_trailing_whitespace = true
 
 [*.{targets,props,csproj,nuspec,cake}]
 tab_width = 2
