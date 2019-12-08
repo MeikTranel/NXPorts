@@ -23,6 +23,8 @@ jobs:
       with:
         name: Packages
         path: out/packages
+    - name: Setup NuGet.exe (Path etc.)
+      uses: NuGet/setup-nuget@v1.0.2
     - name: Add GPR Source
       run: nuget source Add -Name "GitHub" -Source "https://nuget.pkg.github.com/MeikTranel/index.json" -UserName MeikTranel -Password ${{ secrets.GITHUB_TOKEN }}
     - name: Push to GPR
