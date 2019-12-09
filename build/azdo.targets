@@ -1,6 +1,0 @@
-<Project>
-  <!-- Use AzDO logging command to update the build number -->
-  <Target Name="UpdateAzureDevOpsBuildNumber" Condition="'$(IsRunningOnAzureDevOps)' == 'true'">
-    <Message Text="##vso[build.updatebuildnumber]$(Version)" Importance="High" />
-  </Target>
-</Project>

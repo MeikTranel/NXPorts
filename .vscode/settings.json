@@ -1,6 +1,5 @@
 {
     "files.associations": {
-        "azdo*.yml": "azure-pipelines",
         "*.props": "msbuild",
         "*.targets": "msbuild",
         "*.csproj": "msbuild"

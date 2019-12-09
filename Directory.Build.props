@@ -29,6 +29,4 @@
     -->
     <BuildType>dev</BuildType>
   </PropertyGroup>
-
-  <Import Project="./build/azdo.props" />
 </Project>
