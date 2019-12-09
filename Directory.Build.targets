@@ -1,5 +1,4 @@
 <Project>
-  <Import Project="./build/azdo.targets" />
   <Import Project="./build/versioning.targets" />
   <Import Project="./build/sourcelink.targets" />
 </Project>
