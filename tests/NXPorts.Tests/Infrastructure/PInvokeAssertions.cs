@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace NXPorts.Tests
+namespace NXPorts.Tests.Infrastructure
 {
     public static class PInvokeAssertions
     {
@@ -20,12 +20,12 @@ namespace NXPorts.Tests
         }
 
 #pragma warning disable IDE0060 // Remove unused parameter
-        public static void RunsWithoutError<TDelegate>(this Assert assert, string filePath, string expectedFunctionAlias, Action<TDelegate> action) 
+        public static void RunsWithoutError<TDelegate>(this Assert assert, string filePath, string expectedFunctionAlias, Action<TDelegate> action)
 #pragma warning restore IDE0060 // Remove unused parameter
             where TDelegate : Delegate
         {
             IntPtr dllHandle = UnsafeNativeMethods.LoadLibrary(filePath);
-            IntPtr procedureAddress = UnsafeNativeMethods.GetProcAddress(dllHandle, expectedFunctionAlias);                
+            IntPtr procedureAddress = UnsafeNativeMethods.GetProcAddress(dllHandle, expectedFunctionAlias);
             try
             {
                 var pInvokeDelegate = Marshal.GetDelegateForFunctionPointer<TDelegate>(procedureAddress);

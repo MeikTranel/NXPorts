@@ -16,10 +16,10 @@ namespace NXPorts.Tests
                 testEnv.SetupNXPortsProject("./sdknet48.csproj").Save();
                 testEnv.CopyFileFromTestFiles("Simple.cs");
 
-                var results = testEnv.Build("./sdknet48.csproj");
+                var (AnalyzerResults, _) = testEnv.Build("./sdknet48.csproj");
 
-                Assert.IsTrue(results.AnalyzerResults.OverallSuccess, "The build failed.");
-                if (results.AnalyzerResults.TryGetTargetFramework("net48", out var net48results))
+                Assert.IsTrue(AnalyzerResults.OverallSuccess, "The build failed.");
+                if (AnalyzerResults.TryGetTargetFramework("net48", out var net48results))
                 {
                     var buildOutputFile = new PeFile(net48results.Properties["TargetPath"]);
                     Assert.AreEqual(1, buildOutputFile.ExportedFunctions.Length, "There is more or less than one export function listed in the resulting dll.");
@@ -40,9 +40,9 @@ namespace NXPorts.Tests
                 testEnv.SetupNXPortsProject("./sdknet48.csproj").Save();
                 testEnv.CopyFileFromTestFiles("Simple.cs");
 
-                var results = testEnv.Build("./sdknet48.csproj", true);
+                var (AnalyzerResults, _) = testEnv.Build("./sdknet48.csproj", true);
 
-                Assert.IsTrue(results.AnalyzerResults.OverallSuccess, "The designtime build failed.");
+                Assert.IsTrue(AnalyzerResults.OverallSuccess, "The designtime build failed.");
             }
         }
 
@@ -54,9 +54,9 @@ namespace NXPorts.Tests
                 testEnv.SetupNXPortsProject("./sdknet48.csproj").Save();
                 testEnv.CopyFileFromTestFiles("Simple.cs");
 
-                var results = testEnv.Build("./sdknet48.csproj");
-                Assert.IsTrue(results.AnalyzerResults.OverallSuccess, "The build failed.");
-                if (results.AnalyzerResults.TryGetTargetFramework("net48", out var net48results))
+                var (AnalyzerResults, _) = testEnv.Build("./sdknet48.csproj");
+                Assert.IsTrue(AnalyzerResults.OverallSuccess, "The build failed.");
+                if (AnalyzerResults.TryGetTargetFramework("net48", out var net48results))
                 {
                     Assert.IsFalse(
                         File.Exists(Path.Combine(Path.GetDirectoryName(net48results.Properties["TargetDir"]), "NXPorts.Attributes.dll")),

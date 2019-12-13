@@ -21,7 +21,6 @@ namespace NXPorts
         [Output]
         public string OutputPath { get; private set; }
 
-
         public override bool Execute()
         {
             try
@@ -41,45 +40,63 @@ namespace NXPorts
 
         public void Write(ExportAttributedAssembly sourceAssembly, string outputPath)
         {
-            if(sourceAssembly == null)
+            if (sourceAssembly == null)
                 throw new ArgumentNullException(nameof(sourceAssembly));
 
-            using (FileStream outputStream = File.OpenWrite(outputPath))
+            if (sourceAssembly.ExportDefinitions.Count > 0)
             {
                 foreach (var exportDefinition in sourceAssembly.ExportDefinitions)
                 {
-                    var message = $"Reweaving method '{exportDefinition.MethodDefinition.FullName}' with alias '{exportDefinition.Alias}' and calling convention '{exportDefinition.CallingConvention}'";
-                    if (exportDefinition.TryApproximateMethodSourcePosition(out var sourcePosition)) {
-                        Log.LogMessage(
-                            subcategory: null, code: null, helpKeyword: null,
-                            file: sourcePosition.FilePath, lineNumber: sourcePosition.Line ?? 0, columnNumber: sourcePosition.Column ?? 0, endLineNumber: 0, endColumnNumber: 0,
-                            MessageImportance.Low, message
-                        );
-                    } else {
-                        Log.LogMessage(MessageImportance.Low, message);
-                    }
-                    var returnType = exportDefinition.MethodDefinition.MethodSig.RetType;
-                    exportDefinition.MethodDefinition.ExportInfo = new MethodExportInfo(exportDefinition.Alias);
-                    exportDefinition.MethodDefinition.MethodSig.RetType = new CModOptSig(
-                        sourceAssembly.Module.CorLibTypes.GetTypeRef(
-                            "System.Runtime.CompilerServices",
-                            ResolveCallingConventionCompilerServicesType(exportDefinition.CallingConvention)
-                        ),
-                        returnType
-                    );
-                    exportDefinition.MethodDefinition.CustomAttributes.RemoveAll(typeof(ExportAttribute).FullName);
+                    RewriteAnnotatedMethod(sourceAssembly, exportDefinition);
                 }
+
                 Log.LogMessage(MessageImportance.Low, "Clearing assembly of incompatible assembly flags.");
                 RemoveToxicDebuggableAttribute(sourceAssembly.Module);
+
                 Log.LogMessage(MessageImportance.Low, "Adjusting PE32 header to reflect the reweaving changes to the assembly file.");
                 var moduleWriterOptions = new ModuleWriterOptions(sourceAssembly.Module);
                 moduleWriterOptions.Cor20HeaderOptions.Flags = StrictenCor20HeaderFlags(moduleWriterOptions.Cor20HeaderOptions.Flags);
                 moduleWriterOptions.Cor20HeaderOptions.Flags &= ~ComImageFlags.ILOnly;
                 moduleWriterOptions.PEHeadersOptions.Characteristics |= Characteristics.Dll;
-                Log.LogMessage(MessageImportance.Low, "Writing the new assembly file to disk...");
-                sourceAssembly.Module.Write(outputStream, moduleWriterOptions);
+
+                using (FileStream outputStream = File.OpenWrite(outputPath))
+                {
+                    Log.LogMessage(MessageImportance.Low, "Writing the new assembly file to disk...");
+                    sourceAssembly.Module.Write(outputStream, moduleWriterOptions);
+                    Log.LogMessage(MessageImportance.Normal, $"Successfully rewritten assembly at '{outputPath}'.");
+                }
+            } 
+            else
+            {
+                Log.LogWarning("No method annotations for export reweaving were found.");
             }
-            Log.LogMessage(MessageImportance.Normal, $"Successfully rewritten assembly at '{outputPath}'.");
+        }
+
+        private void RewriteAnnotatedMethod(ExportAttributedAssembly sourceAssembly, ExportDefinition exportDefinition)
+        {
+            var message = $"Reweaving method '{exportDefinition.MethodDefinition.FullName}' with alias '{exportDefinition.Alias}' and calling convention '{exportDefinition.CallingConvention}'";
+            if (exportDefinition.TryApproximateMethodSourcePosition(out var sourcePosition))
+            {
+                Log.LogMessage(
+                    subcategory: null, code: null, helpKeyword: null,
+                    file: sourcePosition.FilePath, lineNumber: sourcePosition.Line ?? 0, columnNumber: sourcePosition.Column ?? 0, endLineNumber: 0, endColumnNumber: 0,
+                    MessageImportance.Low, message
+                );
+            }
+            else
+            {
+                Log.LogMessage(MessageImportance.Low, message);
+            }
+            var returnType = exportDefinition.MethodDefinition.MethodSig.RetType;
+            exportDefinition.MethodDefinition.ExportInfo = new MethodExportInfo(exportDefinition.Alias);
+            exportDefinition.MethodDefinition.MethodSig.RetType = new CModOptSig(
+                sourceAssembly.Module.CorLibTypes.GetTypeRef(
+                    "System.Runtime.CompilerServices",
+                    ResolveCallingConventionCompilerServicesType(exportDefinition.CallingConvention)
+                ),
+                returnType
+            );
+            exportDefinition.MethodDefinition.CustomAttributes.RemoveAll(typeof(ExportAttribute).FullName);
         }
 
         private static void RemoveToxicDebuggableAttribute(ModuleDefMD module)

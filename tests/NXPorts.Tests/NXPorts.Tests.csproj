@@ -11,7 +11,7 @@
     <PackageReference Include="PeNet" Version="1.0.1" />
     <PackageReference Include="MSBuild.ProjectCreation" Version="1.2.20" />
     <PackageReference Include="Buildalyzer" Version="2.4.0" />
-    
+    <PackageReference Include="FluentAssertions" Version="5.9.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.4.0" />
     <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />

@@ -5,10 +5,10 @@ using System.Linq;
 using System.Reflection;
 using Buildalyzer;
 using Buildalyzer.Environment;
+using Microsoft.Build.Logging;
 using Microsoft.Build.Utilities.ProjectCreation;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NXPorts.Attributes;
 
 namespace NXPorts.Tests.Infrastructure
@@ -86,23 +86,18 @@ namespace NXPorts.Tests.Infrastructure
             CopyFileFromTestFiles(relativeTestFilesPath, relativeTestFilesPath);
         }
 
-        public (AnalyzerResults AnalyzerResults, string log) Build(string projectFilePath, bool designTime = false)
+        public (AnalyzerResults AnalyzerResults, BuildOutput Log) Build(string projectFilePath, bool designTime = false)
         {
-            using(var logWriter = new StringWriter())
-            {
-                var analyzerResults = new AnalyzerManager(
-                    new AnalyzerManagerOptions()
-                    {
-                        LogWriter = logWriter
-                    }
-                ).GetProject(projectFilePath).Build(
-                    new EnvironmentOptions()
-                    {
-                        DesignTime = designTime
-                    }
-                );
-                return (analyzerResults, logWriter.ToString());
-            }
+            var projectAnalyzer = new AnalyzerManager().GetProject(projectFilePath);
+            var logger = BuildOutput.Create();
+            projectAnalyzer.AddBuildLogger(logger);
+            var analyzerResults = projectAnalyzer.Build(
+                new EnvironmentOptions()
+                {
+                    DesignTime = designTime
+                }
+            );
+            return (analyzerResults, logger);
         }
 
 
