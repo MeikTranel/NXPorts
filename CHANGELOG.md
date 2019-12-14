@@ -6,3 +6,4 @@ Once we have a solid base, we will bump to v1 without any breaking changes from 
 * #10 Fixed a bug where loading a NXPorts enabled project in designtime build mode (e.g. Visual Studio) would be blocked by a failing AssemblyExportWriterTask
 * #14 NXPorts now removes the obsolete `NXPorts.Attributes.dll` from the build output
 * Significantly increased logging output to support diagnosing issues when using NXPorts.
+* Added a warning informing the user when NXPorts did not find any annotated method.
