@@ -4,7 +4,11 @@
     <NXPortsTaskAssemblyDirectory Condition=" '$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)\NETCOREMSBuild\</NXPortsTaskAssemblyDirectory>
   </PropertyGroup>
   <UsingTask AssemblyFile="$(NXPortsTaskAssemblyDirectory)NXPorts.dll" TaskName="NXPorts.AssemblyExportWriterTask" />
-  <Target Name="WriteExports" AfterTargets="CoreCompile" Condition="'$(DesignTimeBuild)' != true">
+  <Target Name="CheckIncompatiblePlatformConfigurations">
+    <Error Text="Cannot use NXPorts without specifying the 'PlatformTarget' or 'RuntimeIdentifier' property. Either set PlatformTarget directly or set a RuntimeIdentifier."
+      Condition="'$(PlatformTarget)' == 'AnyCPU' OR '$(PlatformTarget)' == ''" />
+  </Target>
+  <Target Name="WriteExports" Condition="'$(DesignTimeBuild)' != true">
     <AssemblyExportWriterTask InputAssembly="%(IntermediateAssembly.Identity)" OutputPath="%(IntermediateAssembly.Identity)" />
     <!--
       Once the export has been written, we have removed all references to the Attributes assembly,
@@ -14,4 +18,5 @@
       <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)%(Extension)' == 'NXPorts.Attributes.dll'" />
     </ItemGroup>
   </Target>
+  <Target Name="NXPorts" DependsOnTargets="CheckIncompatiblePlatformConfigurations;WriteExports" AfterTargets="CoreCompile"/>
 </Project>

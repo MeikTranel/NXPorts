@@ -7,3 +7,4 @@ Once we have a solid base, we will bump to v1 without any breaking changes from 
 * #14 NXPorts now removes the obsolete `NXPorts.Attributes.dll` from the build output
 * Significantly increased logging output to support diagnosing issues when using NXPorts.
 * Added a warning informing the user when NXPorts did not find any annotated method.
+* #12 NXPorts now throws an error whenever it detects an incompatible project configuration in regards to target platform.

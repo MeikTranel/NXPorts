@@ -72,6 +72,7 @@ namespace NXPorts.Tests.Infrastructure
             File.WriteAllText("Directory.Build.targets", "<Project />");
             return ProjectCreator.Templates.SdkCsproj(projectFilePath, targetFramework: targetFramework)
                 .Property("NXPortsTaskAssemblyDirectory", dir + "\\")
+                .Property("PlatformTarget","x86")
                 .ItemReference(new Uri(Assembly.GetAssembly(typeof(ExportAttribute)).CodeBase).LocalPath)
                 .Import(Path.Combine(dir, "Build", "NXPorts.targets"));
         }
@@ -91,6 +92,7 @@ namespace NXPorts.Tests.Infrastructure
             var projectAnalyzer = new AnalyzerManager().GetProject(projectFilePath);
             var logger = BuildOutput.Create();
             projectAnalyzer.AddBuildLogger(logger);
+            projectAnalyzer.AddBinaryLogger("build.binlog");
             var analyzerResults = projectAnalyzer.Build(
                 new EnvironmentOptions()
                 {
