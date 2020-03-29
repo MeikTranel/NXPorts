@@ -7,7 +7,7 @@ on:
     - master
 
 env:
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
 
 jobs:
   build:
@@ -15,9 +15,9 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Setup Dotnet for use with actions
-      uses: actions/setup-dotnet@v1.0.0
+      uses: actions/setup-dotnet@v1
       with:
-        version: 2.2.301
+        dotnet-version: 2.2.301
     - name: Test
       run: dotnet test -c Release -p:EnableCoverage=true --logger:"console;verbosity=normal" -p:ContinuousIntegrationBuild=true -p:BuildType=canary
     - name: Pack

@@ -5,7 +5,7 @@ on:
     types: [published]
 
 env:
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
 
 jobs:
   build:
@@ -13,9 +13,9 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Setup Dotnet for use with actions
-      uses: actions/setup-dotnet@v1.0.0
+      uses: actions/setup-dotnet@v1
       with:
-        version: 2.2.301
+        dotnet-version: 2.2.301
     - name: Pack
       run: dotnet pack -c Release -p:PackageOutputPath="$env:GITHUB_WORKSPACE/out/packages" -p:ContinuousIntegrationBuild=true -p:BuildType=tagged
     - name: Upload artifact
