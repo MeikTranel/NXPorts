@@ -37,7 +37,7 @@ namespace NXPorts.Tests
             {
                 var testCode = @"namespace Test {
                                     class TestClassA {
-                                        [NXPorts.Attributes.Export]
+                                        [NXPorts.Attributes.DllExport]
                                         public static void DoShizzle()
                                         {
                                             System.Console.WriteLine(""asdsad"");
@@ -61,7 +61,7 @@ namespace NXPorts.Tests
             {
                 var testCode = @"namespace Test {
                                     class TestClassA {
-                                        [NXPorts.Attributes.Export(alias:""Aids"")]
+                                        [NXPorts.Attributes.DllExport(alias:""Aids"")]
                                         public static void DoShizzle()
                                         {
                                             System.Console.WriteLine(""asdsad"");
@@ -87,7 +87,7 @@ namespace NXPorts.Tests
                 var testCode = @"using System.Runtime.InteropServices;
                                 namespace Test {
                                     class TestClassA {
-                                        [NXPorts.Attributes.Export(callingConvention:CallingConvention.FastCall)]
+                                        [NXPorts.Attributes.DllExport(callingConvention:CallingConvention.FastCall)]
                                         public static void DoShizzle()
                                         {
                                             System.Console.WriteLine(""asdsad"");

@@ -30,9 +30,9 @@ namespace NXPorts
             {
                 foreach(var method in type.Methods)
                 {
-                    if(method.CustomAttributes.IsDefined(new Attributes.ExportAttribute().GetType().FullName))
+                    if(method.CustomAttributes.IsDefined(new Attributes.DllExportAttribute().GetType().FullName))
                     {
-                        var attributeRef = method.CustomAttributes.Find(new Attributes.ExportAttribute().GetType().FullName);
+                        var attributeRef = method.CustomAttributes.Find(new Attributes.DllExportAttribute().GetType().FullName);
                         var expDef = ExportDefinition.Create(method,attributeRef);
                         yield return expDef;
                     }

@@ -73,7 +73,7 @@ namespace NXPorts.Tests.Infrastructure
             return ProjectCreator.Templates.SdkCsproj(projectFilePath, targetFramework: targetFramework)
                 .Property("NXPortsTaskAssemblyDirectory", dir + "\\")
                 .Property("PlatformTarget","x86")
-                .ItemReference(new Uri(Assembly.GetAssembly(typeof(ExportAttribute)).CodeBase).LocalPath)
+                .ItemReference(new Uri(Assembly.GetAssembly(typeof(DllExportAttribute)).CodeBase).LocalPath)
                 .Import(Path.Combine(dir, "Build", "NXPorts.targets"));
         }
 

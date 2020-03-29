@@ -96,7 +96,7 @@ namespace NXPorts
                 ),
                 returnType
             );
-            exportDefinition.MethodDefinition.CustomAttributes.RemoveAll(typeof(ExportAttribute).FullName);
+            exportDefinition.MethodDefinition.CustomAttributes.RemoveAll(typeof(DllExportAttribute).FullName);
         }
 
         private static void RemoveToxicDebuggableAttribute(ModuleDefMD module)

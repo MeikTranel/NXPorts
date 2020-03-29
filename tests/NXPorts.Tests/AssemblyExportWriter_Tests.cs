@@ -19,7 +19,7 @@ namespace NXPorts.Tests
             {
                 var testCode = @"namespace Test {
                                     public class TestClassA {
-                                        [NXPorts.Attributes.Export]
+                                        [NXPorts.Attributes.DllExport]
                                         public static string DoSomething()
                                         {
                                             return ""TestReturnValue"";
@@ -54,7 +54,7 @@ namespace NXPorts.Tests
             {
                 var testCode = @"namespace Test {
                                     public class TestClassA {
-                                        [NXPorts.Attributes.Export]
+                                        [NXPorts.Attributes.DllExport]
                                         public static void DoSomething() { }
                                     }
                                 }";
@@ -73,10 +73,10 @@ namespace NXPorts.Tests
                     var methodsWithOffendingAttribute = from t in resultModule.Types
                                                         from m in t.Methods
                                                         from ca in m.CustomAttributes
-                                                        where ca.TypeFullName == typeof(Attributes.ExportAttribute).FullName
+                                                        where ca.TypeFullName == typeof(Attributes.DllExportAttribute).FullName
                                                         select m;
 
-                    Assert.AreEqual(0, methodsWithOffendingAttribute.Count(),$"Assembly was left with one ore more {nameof(Attributes.ExportAttribute)} occurences.");
+                    Assert.AreEqual(0, methodsWithOffendingAttribute.Count(),$"Assembly was left with one ore more {nameof(Attributes.DllExportAttribute)} occurences.");
                 }
             }
         }
@@ -88,7 +88,7 @@ namespace NXPorts.Tests
             {
                 var testCode = @"namespace Test {
                                     public class TestClassA {
-                                        [NXPorts.Attributes.Export]
+                                        [NXPorts.Attributes.DllExport]
                                         public static void DoSomething()
                                         {
                                         }
@@ -106,7 +106,7 @@ namespace NXPorts.Tests
 
                 using (var resultModule = ModuleDefMD.Load("./testOut.dll"))
                 {
-                    var simpleNameOfAttributeAssembly = typeof(NXPorts.Attributes.ExportAttribute).Assembly.GetName().Name;
+                    var simpleNameOfAttributeAssembly = typeof(NXPorts.Attributes.DllExportAttribute).Assembly.GetName().Name;
                     Assert.AreEqual(
                         null,
                         resultModule.GetAssemblyRef(simpleNameOfAttributeAssembly),

@@ -27,7 +27,7 @@ The following code will result in an exported function named `SampleExportFunc`.
 
 ```CSharp
 public static class Exports {
-  [Export(alias:"SampleExportFunc")]
+  [DllExport(alias:"SampleExportFunc")]
   public static double Add(double a, double b)
   {
       return a + b;
