@@ -1,13 +1,11 @@
-﻿using NXPorts.Attributes;
-
-namespace NETFX_OldCSProj
+﻿namespace NETFX_OldCSProj
 {
     public static class Exports
     {
         /// <summary>
         /// The exported c function will be named "DoSomething"
         /// </summary>
-        [DllExport]
+        [NXPorts.Attributes.DllExport()]
         public static void DoSomething()
         {
             System.Console.WriteLine(nameof(DoSomething));
@@ -16,7 +14,7 @@ namespace NETFX_OldCSProj
         /// <summary>
         /// The exported c function will be named "PINVOKE_Rocks"
         /// </summary>
-        [DllExport("PINVOKE_Rocks")]
+        [NXPorts.Attributes.DllExport("PINVOKE_Rocks")]
         public static void DoSomething2ElectricBogaloo()
         {
             System.Console.WriteLine(nameof(DoSomething2ElectricBogaloo));

@@ -18,9 +18,13 @@ namespace NXPorts
         public string InputAssembly { get; private set; }
 
         [Required]
+        public string DebugType { get; private set; }
+
+        [Required]
         [Output]
         public string OutputPath { get; private set; }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "We need this as a guard clause for the time being.")]
         public override bool Execute()
         {
             try

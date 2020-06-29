@@ -15,9 +15,20 @@ namespace NXPorts
                 throw new ArgumentNullException(nameof(assemblyFilePath));
             if (!File.Exists(assemblyFilePath))
                 throw new ArgumentException("The given file path does not exist.", nameof(assemblyFilePath));
-
-            var assemblyData = ReadAssemblyData(assemblyFilePath);
-            Module = ProduceModuleDefinition(assemblyData);
+            try
+            {
+                Module = ModuleDefMD.Load(
+                    assemblyFilePath,
+                    new ModuleCreationOptions
+                    {
+                        TryToLoadPdbFromDisk = true
+                    }
+                );
+            }
+            catch (Exception E)
+            {
+                throw new InvalidOperationException("NXPorts encountered an exception while trying to load the source assembly.", E);
+            }
             ExportDefinitions = new List<ExportDefinition>(RetrieveExportDefinitions());
         }
 
@@ -37,34 +48,6 @@ namespace NXPorts
                         yield return expDef;
                     }
                 }
-            }
-        }
-
-        private static byte[] ReadAssemblyData(string assemblyFilePath)
-        {
-            try
-            {
-                return File.ReadAllBytes(assemblyFilePath);
-            }
-            catch (DirectoryNotFoundException E)
-            {
-                throw new InvalidOperationException($"Could not find the assembly at path '{assemblyFilePath}'.", E);
-            }
-            catch (Exception E)
-            {
-                throw new InvalidOperationException("Something went wrong while trying to load the assembly data.", E);
-            }
-        }
-
-        private static ModuleDefMD ProduceModuleDefinition(byte[] assemblyData)
-        {
-            try
-            {
-                return ModuleDefMD.Load(assemblyData);
-            }
-            catch (Exception E)
-            {
-                throw new InvalidOperationException("DNLib encountered an exception while trying to load the assembly.", E);
             }
         }
 

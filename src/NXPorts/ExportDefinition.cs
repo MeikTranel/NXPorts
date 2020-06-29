@@ -23,6 +23,11 @@ namespace NXPorts
 
         public static ExportDefinition Create(MethodDef method, CustomAttribute attributeRef)
         {
+            if (method is null)
+                throw new ArgumentNullException(nameof(method));
+            if (attributeRef is null)
+                throw new ArgumentNullException(nameof(attributeRef));
+
             var alias = method.Name;
             if(TryGetCustomExportAlias(attributeRef, out var customAlias))
             {
@@ -41,31 +46,15 @@ namespace NXPorts
         static bool TryGetCustomExportAlias(CustomAttribute attributeRef, out string customAlias)
         {
             customAlias = "";
-            //TODO: Find better / more safe solutions
-            try {
-                var CA = attributeRef.ConstructorArguments.Where(ca => ca.Type.TypeName == "String").First();
-                var constructorArgumentValue = CA.Value.ToString();
-                if(!string.IsNullOrEmpty(constructorArgumentValue))
-                {
-                    customAlias = constructorArgumentValue;
-                    return true;
-                }
-            } catch {}
+            var CA = attributeRef.ConstructorArguments.Where(ca => ca.Type.TypeName == "String").First();
+            if(CA.Value is object)
+            {
+                customAlias = CA.Value.ToString();
+                return true;
+            }
             return false;
         }
 
-        /// <remarks>
-        ///   PE32 identifies exports by the ordinal value.
-        ///   A export name is not explicitly required and only explicitly referenced through
-        ///   an additional lookup table identifying the ordinal with a 0-terminated ASCII string.
-        ///   Until someone explicitly expresses the wish to have unnamed exports,
-        ///   we assume that 100% of all consumers want their exports to be named, which makes the
-        ///   export name the de facto identifier.
-        /// </remarks>
-        public bool Equals(ExportDefinition other)
-        {
-            return this.Alias.Equals(other.Alias);
-        }
 
         public bool TryApproximateMethodSourcePosition(out SourcePosition sourcePosition)
         {
@@ -82,6 +71,32 @@ namespace NXPorts
             } else {
                 return false;
             }
+        }
+
+        /// <remarks>
+        ///   PE32 identifies exports by the ordinal value.
+        ///   A export name is not explicitly required and only explicitly referenced through
+        ///   an additional lookup table identifying the ordinal with a 0-terminated ASCII string.
+        ///   Until someone explicitly expresses the wish to have unnamed exports,
+        ///   we assume that 100% of all consumers want their exports to be named, which makes the
+        ///   export name the de facto identifier.
+        /// </remarks>
+        public bool Equals(ExportDefinition other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+            return this.Alias.Equals(other.Alias, StringComparison.InvariantCultureIgnoreCase);
+        }
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ExportDefinition);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }
