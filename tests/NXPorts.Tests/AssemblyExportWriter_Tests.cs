@@ -2,9 +2,7 @@
 using Microsoft.Build.Utilities.ProjectCreation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NXPorts.Tests.Infrastructure;
-using PeNet;
 using System.Linq;
-using System.Reflection;
 
 namespace NXPorts.Tests
 {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using dnlib.DotNet;
 
@@ -7,6 +8,8 @@ namespace NXPorts
 {
     public sealed class ExportAttributedAssembly : IDisposable
     {
+        private static readonly ModuleContext moduleContext = ModuleDef.CreateModuleContext();
+
         public IList<ExportDefinition> ExportDefinitions { get; }
 
         public ExportAttributedAssembly(string assemblyFilePath)
@@ -17,11 +20,13 @@ namespace NXPorts
                 throw new ArgumentException("The given file path does not exist.", nameof(assemblyFilePath));
             try
             {
+
                 Module = ModuleDefMD.Load(
                     assemblyFilePath,
                     new ModuleCreationOptions
                     {
-                        TryToLoadPdbFromDisk = true
+                        TryToLoadPdbFromDisk = true,
+                        Context = moduleContext
                     }
                 );
             }
@@ -36,8 +41,8 @@ namespace NXPorts
 
         private IEnumerable<ExportDefinition> RetrieveExportDefinitions()
         {
-            var allTypes = this.Module.Types;
-            foreach (var type in allTypes)
+            var definitions = new Collection<ExportDefinition>();
+            foreach (var type in this.Module.Types)
             {
                 foreach(var method in type.Methods)
                 {
@@ -45,10 +50,11 @@ namespace NXPorts
                     {
                         var attributeRef = method.CustomAttributes.Find(new Attributes.DllExportAttribute().GetType().FullName);
                         var expDef = ExportDefinition.Create(method,attributeRef);
-                        yield return expDef;
+                        definitions.Add(expDef);
                     }
                 }
             }
+            return definitions;
         }
 
         #region IDisposable Support

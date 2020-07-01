@@ -18,13 +18,10 @@ namespace NXPorts
         public string InputAssembly { get; private set; }
 
         [Required]
-        public string DebugType { get; private set; }
-
-        [Required]
         [Output]
         public string OutputPath { get; private set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "We need this as a guard clause for the time being.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "We need this as a guard clause to capture and wrap all uncaught errors")]
         public override bool Execute()
         {
             try
@@ -59,6 +56,7 @@ namespace NXPorts
 
                 Log.LogMessage(MessageImportance.Low, "Adjusting PE32 header to reflect the reweaving changes to the assembly file.");
                 var moduleWriterOptions = new ModuleWriterOptions(sourceAssembly.Module);
+                moduleWriterOptions.WritePdb = true;
                 moduleWriterOptions.Cor20HeaderOptions.Flags = StrictenCor20HeaderFlags(moduleWriterOptions.Cor20HeaderOptions.Flags);
                 moduleWriterOptions.Cor20HeaderOptions.Flags &= ~ComImageFlags.ILOnly;
                 moduleWriterOptions.PEHeadersOptions.Characteristics |= Characteristics.Dll;

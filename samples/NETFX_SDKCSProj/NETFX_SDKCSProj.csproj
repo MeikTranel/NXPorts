@@ -2,5 +2,6 @@
   <PropertyGroup>
     <TargetFramework>net45</TargetFramework>
     <PlatformTarget>x86</PlatformTarget>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
 </Project>

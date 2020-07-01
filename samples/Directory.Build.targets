@@ -1,4 +1,4 @@
 <Project>
   <!-- CLEAR  -->
-  <Import Project="../src/NXPorts/build/NXPorts.targets" />
+  <Import Project="../src/NXPorts/build/NXPorts.targets"  Condition="$(DisableNXPorts) != true"/>
 </Project>

@@ -1,10 +1,10 @@
 <Project>
   <!-- CLEAR  -->
-  <PropertyGroup>
+  <PropertyGroup Condition="$(DisableNXPorts) != true">
     <NXPortsTaskAssemblyDirectory Condition=" '$(MSBuildRuntimeType)' != 'Core'" >$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)','../src/NXPorts/bin/Debug/net46/'))</NXPortsTaskAssemblyDirectory>
     <NXPortsTaskAssemblyDirectory Condition=" '$(MSBuildRuntimeType)' == 'Core'" >$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)','../src/NXPorts/bin/Debug/netstandard2.0/'))</NXPortsTaskAssemblyDirectory>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup Condition="$(DisableNXPorts) != true">
     <Reference Include="$([MSBuild]::NormalizePath('$(NXPortsTaskAssemblyDirectory)','NXPorts.Attributes.dll'))" />
   </ItemGroup>
 </Project>
