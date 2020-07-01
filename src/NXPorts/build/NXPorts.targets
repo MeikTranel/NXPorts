@@ -20,5 +20,9 @@
       <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)%(Extension)' == 'NXPorts.Attributes.dll'" />
     </ItemGroup>
   </Target>
-  <Target Name="NXPorts" DependsOnTargets="CheckIncompatiblePlatformConfigurations;WriteExports;RemoveAttributesAssemblyFromOutputs" AfterTargets="CoreCompile"/>
+  <Target Name="NXPorts" DependsOnTargets="CheckIncompatiblePlatformConfigurations;WriteExports;RemoveAttributesAssemblyFromOutputs" />
+
+  <PropertyGroup>
+    <TargetsTriggeredByCompilation>NXPorts;$(TargetsTriggeredByCompilation)</TargetsTriggeredByCompilation>
+  </PropertyGroup>
 </Project>
