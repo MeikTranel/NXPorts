@@ -1,6 +1,6 @@
 # NXPorts
 
-[![Build Status](https://dev.azure.com/tranelmeik/NXPorts/_apis/build/status/NXPorts%20CI?branchName=master)](https://dev.azure.com/tranelmeik/NXPorts/_build/latest?definitionId=4&branchName=master)
+[![CI](https://github.com/MeikTranel/NXPorts/workflows/CI/badge.svg)](https://github.com/MeikTranel/NXPorts/actions)
 [![NuGet Gallery Release](https://img.shields.io/nuget/v/NXPorts.svg)](https://www.nuget.org/packages/NXPorts/)
 
 A MSBuild-integrated library/tool to expose entrypoints in .NET assemblies to the platform invocation system or short `PInvoke`.
