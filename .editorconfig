@@ -14,3 +14,6 @@ indent_size = 2
 [*.cs]
 indent_size = 4
 tab_width = 4
+
+# CA1303: Do not pass literals as localized parameters
+dotnet_diagnostic.CA1303.severity = suggestion

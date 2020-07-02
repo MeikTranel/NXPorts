@@ -1,9 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net45</TargetFramework>
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="NXPorts" Version="0.1" />
-  </ItemGroup>
 </Project>

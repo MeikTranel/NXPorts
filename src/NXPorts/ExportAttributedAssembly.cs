@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using dnlib.DotNet;
 
@@ -7,6 +8,8 @@ namespace NXPorts
 {
     public sealed class ExportAttributedAssembly : IDisposable
     {
+        private static readonly ModuleContext moduleContext = ModuleDef.CreateModuleContext();
+
         public IList<ExportDefinition> ExportDefinitions { get; }
 
         public ExportAttributedAssembly(string assemblyFilePath)
@@ -15,9 +18,22 @@ namespace NXPorts
                 throw new ArgumentNullException(nameof(assemblyFilePath));
             if (!File.Exists(assemblyFilePath))
                 throw new ArgumentException("The given file path does not exist.", nameof(assemblyFilePath));
+            try
+            {
 
-            var assemblyData = ReadAssemblyData(assemblyFilePath);
-            Module = ProduceModuleDefinition(assemblyData);
+                Module = ModuleDefMD.Load(
+                    assemblyFilePath,
+                    new ModuleCreationOptions
+                    {
+                        TryToLoadPdbFromDisk = true,
+                        Context = moduleContext
+                    }
+                );
+            }
+            catch (Exception E)
+            {
+                throw new InvalidOperationException("NXPorts encountered an exception while trying to load the source assembly.", E);
+            }
             ExportDefinitions = new List<ExportDefinition>(RetrieveExportDefinitions());
         }
 
@@ -25,8 +41,8 @@ namespace NXPorts
 
         private IEnumerable<ExportDefinition> RetrieveExportDefinitions()
         {
-            var allTypes = this.Module.Types;
-            foreach (var type in allTypes)
+            var definitions = new Collection<ExportDefinition>();
+            foreach (var type in this.Module.Types)
             {
                 foreach(var method in type.Methods)
                 {
@@ -34,38 +50,11 @@ namespace NXPorts
                     {
                         var attributeRef = method.CustomAttributes.Find(new Attributes.DllExportAttribute().GetType().FullName);
                         var expDef = ExportDefinition.Create(method,attributeRef);
-                        yield return expDef;
+                        definitions.Add(expDef);
                     }
                 }
             }
-        }
-
-        private static byte[] ReadAssemblyData(string assemblyFilePath)
-        {
-            try
-            {
-                return File.ReadAllBytes(assemblyFilePath);
-            }
-            catch (DirectoryNotFoundException E)
-            {
-                throw new InvalidOperationException($"Could not find the assembly at path '{assemblyFilePath}'.", E);
-            }
-            catch (Exception E)
-            {
-                throw new InvalidOperationException("Something went wrong while trying to load the assembly data.", E);
-            }
-        }
-
-        private static ModuleDefMD ProduceModuleDefinition(byte[] assemblyData)
-        {
-            try
-            {
-                return ModuleDefMD.Load(assemblyData);
-            }
-            catch (Exception E)
-            {
-                throw new InvalidOperationException("DNLib encountered an exception while trying to load the assembly.", E);
-            }
+            return definitions;
         }
 
         #region IDisposable Support
