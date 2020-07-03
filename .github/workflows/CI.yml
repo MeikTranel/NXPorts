@@ -16,8 +16,6 @@ jobs:
     - uses: actions/checkout@v1
     - name: Setup Dotnet for use with actions
       uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 2.2.301
     - name: Test
       run: dotnet test -c Release -p:EnableCoverage=true --logger:"console;verbosity=normal" -p:ContinuousIntegrationBuild=true -p:BuildType=canary
     - name: Pack

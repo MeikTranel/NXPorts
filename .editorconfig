@@ -15,5 +15,5 @@ indent_size = 2
 indent_size = 4
 tab_width = 4
 
-# CA1303: Do not pass literals as localized parameters
-dotnet_diagnostic.CA1303.severity = suggestion
+# Localization seems to be overkill for this package at the moment
+dotnet_diagnostic.CA1303.severity = none
