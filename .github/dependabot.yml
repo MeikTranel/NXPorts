@@ -8,4 +8,4 @@ updates:
       - "bot"
     commit_message:
       prefix: "dependabot:"
-      include_scope: true
+      include: "scope"
