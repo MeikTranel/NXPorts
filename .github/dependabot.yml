@@ -4,8 +4,9 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    labels:
-      - "bot"
-    commit_message:
+    commit-message:
       prefix: "dependabot:"
       include: "scope"
+    labels:
+      - "npm"
+      - "dependencies"
