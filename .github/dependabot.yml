@@ -7,5 +7,5 @@ updates:
     commit-message:
       prefix: "dependabot:"
     labels:
-      - "npm"
+      - "bot"
       - "dependencies"
