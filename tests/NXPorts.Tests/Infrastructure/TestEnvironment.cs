@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using Buildalyzer;
 using Buildalyzer.Environment;
-using Microsoft.Build.Logging;
 using Microsoft.Build.Utilities.ProjectCreation;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -39,10 +38,10 @@ namespace NXPorts.Tests.Infrastructure
                 OutputKind.DynamicallyLinkedLibrary,
                 platform: platform
             );
-            var csc = CSharpCompilation.Create(assemblyName,syntaxTrees,GetCurrentReferencedAssemblies(),options);
+            var csc = CSharpCompilation.Create(assemblyName, syntaxTrees, GetRelevantReferences(), options);
 
-            using(var dllFileStream = new FileStream(Path.Combine(Environment.CurrentDirectory,assemblyName + ".dll"),FileMode.OpenOrCreate))
-            using (var pdbFileStream = new FileStream(Path.Combine(Environment.CurrentDirectory,assemblyName + ".pdb"),FileMode.OpenOrCreate))
+            using(var dllFileStream = new FileStream(Path.Combine(Environment.CurrentDirectory, assemblyName + ".dll"),FileMode.OpenOrCreate))
+            using (var pdbFileStream = new FileStream(Path.Combine(Environment.CurrentDirectory, assemblyName + ".pdb"),FileMode.OpenOrCreate))
             {
                 var emitResult = csc.Emit(dllFileStream,pdbFileStream);
                 return emitResult.Success;
@@ -72,7 +71,7 @@ namespace NXPorts.Tests.Infrastructure
             File.WriteAllText("Directory.Build.targets", "<Project />");
             return ProjectCreator.Templates.SdkCsproj(projectFilePath, targetFramework: targetFramework)
                 .Property("NXPortsTaskAssemblyDirectory", dir + "\\")
-                .Property("PlatformTarget","x86")
+                .Property("PlatformTarget", Environment.Is64BitProcess ? "x64" : "x86" )
                 .ItemReference(new Uri(Assembly.GetAssembly(typeof(DllExportAttribute)).CodeBase).LocalPath)
                 .Import(Path.Combine(dir, "Build", "NXPorts.targets"));
         }
@@ -109,44 +108,17 @@ namespace NXPorts.Tests.Infrastructure
         }
 
         /// <summary>
-        /// Enumerates all currently referenced assemblies and produces MetadataReference items for them.
+        /// Enumerate a list of <see cref="MetadataReference"/> for Roslyn to use for type resolutions
         /// </summary>
-        /// <remarks>
-        /// DIRTY HACK.... but i can't be bothered. Out of the scope of the project to provide nice runtime compilation capabilities.
-        /// </remarks>
-        private static IEnumerable<MetadataReference> GetCurrentReferencedAssemblies()
+        private static IEnumerable<MetadataReference> GetRelevantReferences()
         {
-#if NETCORE
-            var runtimeAssemblyLocations = ((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")).Split(';');
-#else
-            var domainAssemblies = new HashSet<Assembly>(AppDomain.CurrentDomain.GetAssemblies());
-            var runtimeAssemblyLocations = new HashSet<String>(
-                AppDomain.CurrentDomain.GetAssemblies()
-                .Where(a => !a.IsDynamic)
-                .Select(a => a.Location)
-            );
-            foreach (var ass in domainAssemblies)
-            {
-                runtimeAssemblyLocations.UnionWith(ass.GetReferencedAssemblies()
-                    .Where(
-                        a => {
-                            try
-                            {
-                                Assembly.Load(a);
-                                return true;
-                            } catch
-                            {
-                                return false;
-                            }
-                        }
-                    ).Select(a => Assembly.Load(a).Location)
-                );
-            }
-#endif
-            foreach (var assemblyPath in runtimeAssemblyLocations)
-            {
-                yield return MetadataReference.CreateFromFile(assemblyPath);
-            }
+            return new List<MetadataReference>(new[] {
+                MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(NXPorts.Attributes.DllExportAttribute).GetTypeInfo().Assembly.Location),
+                MetadataReference.CreateFromFile(Path.Combine(System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory(), "netstandard.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory(), "System.Runtime.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory(), "System.Runtime.InteropServices.dll"))
+            });
         }
 
         public void Dispose()
