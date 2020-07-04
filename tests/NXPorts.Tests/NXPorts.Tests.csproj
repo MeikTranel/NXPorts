@@ -9,7 +9,7 @@
 
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.6.0" />
     <PackageReference Include="PeNet" Version="1.0.1" />
-    <PackageReference Include="MSBuild.ProjectCreation" Version="1.2.20" />
+    <PackageReference Include="MSBuild.ProjectCreation" Version="1.4.2" />
     <PackageReference Include="Buildalyzer" Version="2.4.0" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
