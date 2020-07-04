@@ -86,7 +86,7 @@ namespace NXPorts.Tests.Infrastructure
             CopyFileFromTestFiles(relativeTestFilesPath, relativeTestFilesPath);
         }
 
-        public (AnalyzerResults AnalyzerResults, BuildOutput Log) Build(string projectFilePath, bool designTime = false)
+        public (IAnalyzerResults AnalyzerResults, BuildOutput Log) Build(string projectFilePath, bool designTime = false)
         {
             var projectAnalyzer = new AnalyzerManager().GetProject(projectFilePath);
             var logger = BuildOutput.Create();
