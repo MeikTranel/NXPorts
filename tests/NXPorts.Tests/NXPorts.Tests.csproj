@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0" />
     <PackageReference Include="PeNet" Version="1.0.1" />
     <PackageReference Include="MSBuild.ProjectCreation" Version="1.4.6" />
-    <PackageReference Include="Buildalyzer" Version="3.0.1" />
+    <PackageReference Include="Buildalyzer" Version="3.1.0" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
     <PackageReference Include="MSTest.TestAdapter;MSTest.TestFramework" Version="2.1.2" />
