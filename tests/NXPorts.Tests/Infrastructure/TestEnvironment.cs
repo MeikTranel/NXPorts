@@ -1,26 +1,46 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using Buildalyzer;
 using Buildalyzer.Environment;
 using Microsoft.Build.Utilities.ProjectCreation;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using NXPorts.Attributes;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace NXPorts.Tests.Infrastructure
 {
     public class TestEnvironment : IDisposable
     {
-        private readonly string oldWorkingDirectory = Environment.CurrentDirectory;
+        public DirectoryInfo CurrentDirectory { get; private set; }
+
+        public string CurrentDirectoryPath => CurrentDirectory.FullName;
+
         public TestEnvironment()
         {
-            var testPWD = Directory.CreateDirectory(
+            CurrentDirectory = Directory.CreateDirectory(
                 Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())
             );
-            Environment.CurrentDirectory = testPWD.FullName;
+        }
+
+        /// <summary>
+        /// Returns an absolute Path inside the test environment.
+        /// </summary>
+        /// <param name="path">a relative Path to a file or directory.</param>
+        /// <returns>A rooted Path.</returns>
+        public string GetAbsolutePath(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                throw new ArgumentNullException(nameof(path));
+            if (Path.IsPathRooted(path))
+                throw new ArgumentException("Cannot produce an absolute path inside the test environment if the given path is already absolute.", nameof(path));
+
+            var absolutePath = Path.Combine(CurrentDirectoryPath, path);
+            Debug.Assert(Path.IsPathRooted(absolutePath));
+            return absolutePath;
         }
 
         /// <summary>
@@ -40,8 +60,8 @@ namespace NXPorts.Tests.Infrastructure
             );
             var csc = CSharpCompilation.Create(assemblyName, syntaxTrees, GetRelevantReferences(), options);
 
-            using (var dllFileStream = new FileStream(Path.Combine(Environment.CurrentDirectory, assemblyName + ".dll"), FileMode.OpenOrCreate))
-            using (var pdbFileStream = new FileStream(Path.Combine(Environment.CurrentDirectory, assemblyName + ".pdb"), FileMode.OpenOrCreate))
+            using (var dllFileStream = new FileStream(Path.Combine(CurrentDirectoryPath, assemblyName + ".dll"), FileMode.OpenOrCreate))
+            using (var pdbFileStream = new FileStream(Path.Combine(CurrentDirectoryPath, assemblyName + ".pdb"), FileMode.OpenOrCreate))
             {
                 var emitResult = csc.Emit(dllFileStream, pdbFileStream);
                 return emitResult.Success;
@@ -67,8 +87,8 @@ namespace NXPorts.Tests.Infrastructure
         public ProjectCreator SetupNXPortsProject(string projectFilePath = "./test.csproj", string targetFramework = "net48")
         {
             var dir = GetApplicationDirectory();
-            File.WriteAllText("Directory.Build.props", "<Project />");
-            File.WriteAllText("Directory.Build.targets", "<Project />");
+            File.WriteAllText(GetAbsolutePath("Directory.Build.props"), "<Project />");
+            File.WriteAllText(GetAbsolutePath("Directory.Build.targets"), "<Project />");
             return ProjectCreator.Templates.SdkCsproj(projectFilePath, targetFramework: targetFramework)
                 .Property("NXPortsTaskAssemblyDirectory", dir + "\\")
                 .Property("PlatformTarget", Environment.Is64BitProcess ? "x64" : "x86")
@@ -78,7 +98,7 @@ namespace NXPorts.Tests.Infrastructure
 
         public void CopyFileFromTestFiles(string relativeTestFilesPath, string destinationPath)
         {
-            File.Copy(Path.Combine(GetApplicationDirectory(), "TestFiles", relativeTestFilesPath), destinationPath);
+            File.Copy(Path.Combine(GetApplicationDirectory(), "TestFiles", relativeTestFilesPath), GetAbsolutePath(destinationPath));
         }
 
         public void CopyFileFromTestFiles(string relativeTestFilesPath)
@@ -91,7 +111,7 @@ namespace NXPorts.Tests.Infrastructure
             var projectAnalyzer = new AnalyzerManager().GetProject(projectFilePath);
             var logger = BuildOutput.Create();
             projectAnalyzer.AddBuildLogger(logger);
-            projectAnalyzer.AddBinaryLogger("build.binlog");
+            projectAnalyzer.AddBinaryLogger(GetAbsolutePath("build.binlog"));
             var analyzerResults = projectAnalyzer.Build(
                 new EnvironmentOptions()
                 {
@@ -114,7 +134,7 @@ namespace NXPorts.Tests.Infrastructure
         {
             return new List<MetadataReference>(new[] {
                 MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(NXPorts.Attributes.DllExportAttribute).GetTypeInfo().Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(DllExportAttribute).GetTypeInfo().Assembly.Location),
                 MetadataReference.CreateFromFile(Path.Combine(System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory(), "netstandard.dll")),
                 MetadataReference.CreateFromFile(Path.Combine(System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory(), "System.Runtime.dll")),
                 MetadataReference.CreateFromFile(Path.Combine(System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory(), "System.Runtime.InteropServices.dll"))
@@ -123,10 +143,12 @@ namespace NXPorts.Tests.Infrastructure
 
         public void Dispose()
         {
-            Environment.CurrentDirectory = oldWorkingDirectory;
-            //Ideally i wanted to remove all files after the environment is disposed
-            //but due to some hardships with unloading unmanaged assemblies loaded using
-            //PInvoke we have to make due with what we have.
+            foreach (var file in CurrentDirectory.GetDirectories("*", SearchOption.AllDirectories))
+                Console.WriteLine("d -> " + file.Name);
+            foreach (var file in CurrentDirectory.GetFiles("*", SearchOption.AllDirectories))
+                Console.WriteLine("f -> " + file.Name);
+
+            GC.SuppressFinalize(this);
         }
     }
 }

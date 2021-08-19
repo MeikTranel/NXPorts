@@ -13,10 +13,10 @@ namespace NXPorts.Tests
         {
             using (var testEnv = new TestEnvironment())
             {
-                testEnv.SetupNXPortsProject("./sdknet48.csproj").Save();
+                testEnv.SetupNXPortsProject(testEnv.GetAbsolutePath("./sdknet48.csproj")).Save();
                 testEnv.CopyFileFromTestFiles("Simple.cs");
 
-                var (AnalyzerResults, _) = testEnv.Build("./sdknet48.csproj");
+                var (AnalyzerResults, _) = testEnv.Build(testEnv.GetAbsolutePath("./sdknet48.csproj"));
 
                 Assert.IsTrue(AnalyzerResults.OverallSuccess, "The build failed.");
                 if (AnalyzerResults.TryGetTargetFramework("net48", out var net48results))
@@ -37,10 +37,10 @@ namespace NXPorts.Tests
         {
             using (var testEnv = new TestEnvironment())
             {
-                testEnv.SetupNXPortsProject("./sdknet48.csproj").Save();
+                testEnv.SetupNXPortsProject(testEnv.GetAbsolutePath("./sdknet48.csproj")).Save();
                 testEnv.CopyFileFromTestFiles("Simple.cs");
 
-                var (AnalyzerResults, _) = testEnv.Build("./sdknet48.csproj", true);
+                var (AnalyzerResults, _) = testEnv.Build(testEnv.GetAbsolutePath("./sdknet48.csproj"), true);
 
                 Assert.IsTrue(AnalyzerResults.OverallSuccess, "The designtime build failed.");
             }
@@ -51,10 +51,10 @@ namespace NXPorts.Tests
         {
             using (var testEnv = new TestEnvironment())
             {
-                testEnv.SetupNXPortsProject("./sdknet48.csproj").Save();
+                testEnv.SetupNXPortsProject(testEnv.GetAbsolutePath("./sdknet48.csproj")).Save();
                 testEnv.CopyFileFromTestFiles("Simple.cs");
 
-                var (AnalyzerResults, _) = testEnv.Build("./sdknet48.csproj");
+                var (AnalyzerResults, _) = testEnv.Build(testEnv.GetAbsolutePath("./sdknet48.csproj"));
                 Assert.IsTrue(AnalyzerResults.OverallSuccess, "The build failed.");
                 if (AnalyzerResults.TryGetTargetFramework("net48", out var net48results))
                 {

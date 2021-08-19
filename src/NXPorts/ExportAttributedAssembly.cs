@@ -1,8 +1,8 @@
-﻿using System;
+﻿using dnlib.DotNet;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using dnlib.DotNet;
 
 namespace NXPorts
 {

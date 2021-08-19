@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 using NXPorts.Tests.Infrastructure;
+using System.Linq;
 
 namespace NXPorts.Tests
 {
@@ -23,7 +23,7 @@ namespace NXPorts.Tests
                 if (!testEnv.CreateTestDLL("test", new[] { testCode }))
                     Assert.Fail("Test compile failed.");
 
-                using (var testExportAttributedAssembly = new ExportAttributedAssembly("./test.dll"))
+                using (var testExportAttributedAssembly = new ExportAttributedAssembly(testEnv.GetAbsolutePath("./test.dll")))
                 {
                     Assert.IsTrue(testExportAttributedAssembly.ExportDefinitions.Count == 0);
                 }
@@ -47,7 +47,7 @@ namespace NXPorts.Tests
                 if (!testEnv.CreateTestDLL("test", new[] { testCode }))
                     Assert.Fail("Test compile failed.");
 
-                using (var testExportAttributedAssembly = new ExportAttributedAssembly("./test.dll"))
+                using (var testExportAttributedAssembly = new ExportAttributedAssembly(testEnv.GetAbsolutePath("./test.dll")))
                 {
                     Assert.IsTrue(testExportAttributedAssembly.ExportDefinitions.Count == 1);
                 }
@@ -71,7 +71,7 @@ namespace NXPorts.Tests
                 if (!testEnv.CreateTestDLL("test", new[] { testCode }))
                     Assert.Fail("Test compile failed.");
 
-                using (var testExportAttributedAssembly = new ExportAttributedAssembly("./test.dll"))
+                using (var testExportAttributedAssembly = new ExportAttributedAssembly(testEnv.GetAbsolutePath("./test.dll")))
                 {
                     Assert.IsTrue(testExportAttributedAssembly.ExportDefinitions.Count == 1);
                     Assert.AreEqual("Aids", testExportAttributedAssembly.ExportDefinitions.First().Alias);
@@ -97,7 +97,7 @@ namespace NXPorts.Tests
                 if (!testEnv.CreateTestDLL("test", new[] { testCode }))
                     Assert.Fail("Test compile failed.");
 
-                using (var testExportAttributedAssembly = new ExportAttributedAssembly("./test.dll"))
+                using (var testExportAttributedAssembly = new ExportAttributedAssembly(testEnv.GetAbsolutePath("./test.dll")))
                 {
                     Assert.IsTrue(testExportAttributedAssembly.ExportDefinitions.Count == 1);
                     Assert.AreEqual(System.Runtime.InteropServices.CallingConvention.FastCall, testExportAttributedAssembly.ExportDefinitions.First().CallingConvention);
