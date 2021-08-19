@@ -67,7 +67,7 @@ namespace NXPorts.Tests
                 {
                     Assert.Inconclusive("Failed to retrieve build results");
                 }
-                
+
             }
         }
     }

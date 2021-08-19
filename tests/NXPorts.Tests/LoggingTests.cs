@@ -27,7 +27,7 @@ namespace NXPorts.Tests
         {
             using (var testEnv = new TestEnvironment())
             {
-                testEnv.SetupNXPortsProject("./sdknet48.csproj").Property("PlatformTarget","AnyCPU").Save();
+                testEnv.SetupNXPortsProject("./sdknet48.csproj").Property("PlatformTarget", "AnyCPU").Save();
                 testEnv.CopyFileFromTestFiles("SimpleWithoutExports.cs");
                 var (AnalyzerResults, Log) = testEnv.Build("./sdknet48.csproj");
                 Log.Errors.Should().HaveCountGreaterOrEqualTo(1);

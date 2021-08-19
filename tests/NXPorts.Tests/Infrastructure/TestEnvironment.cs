@@ -14,7 +14,7 @@ namespace NXPorts.Tests.Infrastructure
 {
     public class TestEnvironment : IDisposable
     {
-        readonly string oldWorkingDirectory = Environment.CurrentDirectory;
+        private readonly string oldWorkingDirectory = Environment.CurrentDirectory;
         public TestEnvironment()
         {
             var testPWD = Directory.CreateDirectory(
@@ -31,7 +31,7 @@ namespace NXPorts.Tests.Infrastructure
         /// <param name="platform">The target platform of the DLL</param>
         /// <returns>Returns True if the dynamic compilation succeeds.</returns>
         /// <remarks>The dynamic compilation will only work if the types used in the code to be compiled are also referenced in some way by the test AppContext.</remarks>
-        public bool CreateTestDLL(string assemblyName,IEnumerable<string> csharpDocuments, Platform platform)
+        public bool CreateTestDLL(string assemblyName, IEnumerable<string> csharpDocuments, Platform platform)
         {
             var syntaxTrees = (csharpDocuments == null) ? throw new ArgumentNullException(nameof(csharpDocuments)) : csharpDocuments.Select(doc => CSharpSyntaxTree.ParseText(doc));
             var options = new CSharpCompilationOptions(
@@ -40,10 +40,10 @@ namespace NXPorts.Tests.Infrastructure
             );
             var csc = CSharpCompilation.Create(assemblyName, syntaxTrees, GetRelevantReferences(), options);
 
-            using(var dllFileStream = new FileStream(Path.Combine(Environment.CurrentDirectory, assemblyName + ".dll"),FileMode.OpenOrCreate))
-            using (var pdbFileStream = new FileStream(Path.Combine(Environment.CurrentDirectory, assemblyName + ".pdb"),FileMode.OpenOrCreate))
+            using (var dllFileStream = new FileStream(Path.Combine(Environment.CurrentDirectory, assemblyName + ".dll"), FileMode.OpenOrCreate))
+            using (var pdbFileStream = new FileStream(Path.Combine(Environment.CurrentDirectory, assemblyName + ".pdb"), FileMode.OpenOrCreate))
             {
-                var emitResult = csc.Emit(dllFileStream,pdbFileStream);
+                var emitResult = csc.Emit(dllFileStream, pdbFileStream);
                 return emitResult.Success;
             }
         }
@@ -56,7 +56,7 @@ namespace NXPorts.Tests.Infrastructure
         /// <param name="csharpDocuments">A set of C# documents</param>
         /// <returns>Returns True if the dynamic compilation succeeds.</returns>
         /// <remarks>The dynamic compilation will only work if the types used in the code to be compiled are also referenced in some way by the test AppContext.</remarks>
-        public bool CreateTestDLL(string assemblyName,IEnumerable<string> csharpDocuments)
+        public bool CreateTestDLL(string assemblyName, IEnumerable<string> csharpDocuments)
         {
             if (Environment.Is64BitProcess)
                 return CreateTestDLL(assemblyName, csharpDocuments, Platform.X64);
@@ -66,12 +66,12 @@ namespace NXPorts.Tests.Infrastructure
 
         public ProjectCreator SetupNXPortsProject(string projectFilePath = "./test.csproj", string targetFramework = "net48")
         {
-            string dir = GetApplicationDirectory();
+            var dir = GetApplicationDirectory();
             File.WriteAllText("Directory.Build.props", "<Project />");
             File.WriteAllText("Directory.Build.targets", "<Project />");
             return ProjectCreator.Templates.SdkCsproj(projectFilePath, targetFramework: targetFramework)
                 .Property("NXPortsTaskAssemblyDirectory", dir + "\\")
-                .Property("PlatformTarget", Environment.Is64BitProcess ? "x64" : "x86" )
+                .Property("PlatformTarget", Environment.Is64BitProcess ? "x64" : "x86")
                 .ItemReference(new Uri(Assembly.GetAssembly(typeof(DllExportAttribute)).CodeBase).LocalPath)
                 .Import(Path.Combine(dir, "Build", "NXPorts.targets"));
         }

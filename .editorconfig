@@ -1,19 +1,39 @@
-# Remove the line below if you want to inherit .editorconfig settings from higher directories
 root = true
 
 [*]
 indent_style = space
 end_of_line = crlf
-insert_final_newline = false
+insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{targets,props,csproj,nuspec,cake}]
+[*.{targets,props,csproj,nuspec,json}]
 tab_width = 2
 indent_size = 2
+
+[*.md]
+max_line_length = off
 
 [*.cs]
 indent_size = 4
 tab_width = 4
 
+# Code Quality
+
 # Localization seems to be overkill for this package at the moment
 dotnet_diagnostic.CA1303.severity = none
+
+# Code Style
+
+# Default severity for analyzer diagnostics with category 'Style'
+dotnet_analyzer_diagnostic.category-Style.severity = warning
+
+# Do not force braces for single statement if scopes
+csharp_prefer_braces = when_multiline
+
+# I do like me my var
+csharp_style_var_when_type_is_apparent = true
+csharp_style_var_for_built_in_types = true
+csharp_style_var_elsewhere = true
+
+# Prefer if/else returns over single line symbol hell
+dotnet_style_prefer_conditional_expression_over_return=false:silent

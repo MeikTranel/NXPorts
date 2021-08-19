@@ -8,14 +8,14 @@
 
   <!--Enable coverage through coverlet's MSBuild task package-->
   <ItemGroup Condition="'$(EnableCoverage)' == 'true'">
-    <PackageReference Include="coverlet.msbuild" Version="2.9.0">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+<PackageReference Include="coverlet.msbuild" Version="3.1.0">
+  <PrivateAssets>all</PrivateAssets>
+  <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+</PackageReference>
   </ItemGroup>
   <PropertyGroup Condition="'$(EnableCoverage)' == 'true'">
     <CollectCoverage>true</CollectCoverage>
     <CoverletOutputFormat>cobertura</CoverletOutputFormat>
-    <CoverletOutput>$(MSBuildProjectDirectory)/bin/$(Configuration)/$(TargetFramework)/</CoverletOutput>
+    <CoverletOutput>$(MSBuildProjectDirectory)/bin/coverage/</CoverletOutput>
   </PropertyGroup>
 </Project>
