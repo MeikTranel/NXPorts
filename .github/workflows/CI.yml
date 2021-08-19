@@ -20,7 +20,8 @@ jobs:
       run: dotnet test -c Release -p:EnableCoverage=true --logger:"console;verbosity=normal" -p:ContinuousIntegrationBuild=true -p:BuildType=canary
     - name: Pack
       run: dotnet pack -c Release -p:PackageOutputPath="$env:GITHUB_WORKSPACE/out/packages" -p:ContinuousIntegrationBuild=true -p:BuildType=canary
-    - uses: codecov/codecov-action@v2
+    - name: Upload Code Coverage
+      uses: codecov/codecov-action@v2
       with:
         files: tests/**/*.opencover.xml
         verbose: true

@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/MeikTranel/NXPorts/workflows/CI/badge.svg)](https://github.com/MeikTranel/NXPorts/actions)
 [![NuGet Gallery Release](https://img.shields.io/nuget/v/NXPorts.svg)](https://www.nuget.org/packages/NXPorts/)
+[![codecov](https://codecov.io/gh/MeikTranel/NXPorts/branch/master/graph/badge.svg?token=DPMCO9NGN5)](https://codecov.io/gh/MeikTranel/NXPorts)
 
 A MSBuild-integrated library/tool to expose entrypoints in .NET assemblies to the platform invocation system or short `PInvoke`.
 It allows you to build .NET libraries that can be called from any development platform that supports `PInvoke`, including **C++**, **C**, **Rust**, **Delphi**, **Python** and so on...
