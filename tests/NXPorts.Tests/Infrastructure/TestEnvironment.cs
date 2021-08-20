@@ -106,17 +106,22 @@ namespace NXPorts.Tests.Infrastructure
             CopyFileFromTestFiles(relativeTestFilesPath, relativeTestFilesPath);
         }
 
-        public (IAnalyzerResults AnalyzerResults, BuildOutput Log) Build(string projectFilePath, bool designTime = false)
+        public (IAnalyzerResults AnalyzerResults, BuildOutput Log) Build(string projectFilePath, bool designTime = false, bool clean = true)
         {
             var projectAnalyzer = new AnalyzerManager().GetProject(projectFilePath);
             var logger = BuildOutput.Create();
             projectAnalyzer.AddBuildLogger(logger);
             projectAnalyzer.AddBinaryLogger(GetAbsolutePath("build.binlog"));
+            var envOptions = new EnvironmentOptions()
+            {
+                DesignTime = designTime
+            };
+            envOptions.TargetsToBuild.Clear();
+            if (clean)
+                envOptions.TargetsToBuild.Add("Clean");
+            envOptions.TargetsToBuild.Add("Build");
             var analyzerResults = projectAnalyzer.Build(
-                new EnvironmentOptions()
-                {
-                    DesignTime = designTime
-                }
+                envOptions
             );
             return (analyzerResults, logger);
         }
