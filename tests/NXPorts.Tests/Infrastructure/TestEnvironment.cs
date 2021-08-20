@@ -143,11 +143,7 @@ namespace NXPorts.Tests.Infrastructure
 
         public void Dispose()
         {
-            foreach (var file in CurrentDirectory.GetDirectories("*", SearchOption.AllDirectories))
-                Console.WriteLine("d -> " + file.Name);
-            foreach (var file in CurrentDirectory.GetFiles("*", SearchOption.AllDirectories))
-                Console.WriteLine("f -> " + file.Name);
-
+            //TODO: Remove IDisposable
             GC.SuppressFinalize(this);
         }
     }
