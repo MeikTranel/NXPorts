@@ -1,4 +1,7 @@
 <Project>
+  <PropertyGroup Condition="'$(BuildType)' != 'dev'" >
+    <EnableSourceLink>true</EnableSourceLink>
+  </PropertyGroup>
   <Import Project="./build/versioning.targets" />
   <Import Project="./build/sourcelink.targets" />
 </Project>

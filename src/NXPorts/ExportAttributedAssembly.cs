@@ -1,8 +1,8 @@
-﻿using System;
+﻿using dnlib.DotNet;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using dnlib.DotNet;
 
 namespace NXPorts
 {
@@ -42,14 +42,14 @@ namespace NXPorts
         private IEnumerable<ExportDefinition> RetrieveExportDefinitions()
         {
             var definitions = new Collection<ExportDefinition>();
-            foreach (var type in this.Module.Types)
+            foreach (var type in Module.Types)
             {
-                foreach(var method in type.Methods)
+                foreach (var method in type.Methods)
                 {
-                    if(method.CustomAttributes.IsDefined(new Attributes.DllExportAttribute().GetType().FullName))
+                    if (method.CustomAttributes.IsDefined(new Attributes.DllExportAttribute().GetType().FullName))
                     {
                         var attributeRef = method.CustomAttributes.Find(new Attributes.DllExportAttribute().GetType().FullName);
-                        var expDef = ExportDefinition.Create(method,attributeRef);
+                        var expDef = ExportDefinition.Create(method, attributeRef);
                         definitions.Add(expDef);
                     }
                 }
@@ -60,9 +60,9 @@ namespace NXPorts
         #region IDisposable Support
         public void Dispose(bool disposing)
         {
-            if(disposing)
+            if (disposing)
             {
-                if(Module != null)
+                if (Module != null)
                 {
                     Module.Dispose();
                     Module = null;

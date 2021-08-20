@@ -24,8 +24,9 @@ namespace NXPorts.Tests.Infrastructure
 #pragma warning restore IDE0060 // Remove unused parameter
             where TDelegate : Delegate
         {
-            IntPtr dllHandle = UnsafeNativeMethods.LoadLibrary(filePath);
-            IntPtr procedureAddress = UnsafeNativeMethods.GetProcAddress(dllHandle, expectedFunctionAlias);
+            if (action is null) throw new ArgumentNullException(nameof(action));
+            var dllHandle = UnsafeNativeMethods.LoadLibrary(filePath);
+            var procedureAddress = UnsafeNativeMethods.GetProcAddress(dllHandle, expectedFunctionAlias);
             try
             {
                 var pInvokeDelegate = Marshal.GetDelegateForFunctionPointer<TDelegate>(procedureAddress);

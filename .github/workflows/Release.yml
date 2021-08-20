@@ -14,8 +14,6 @@ jobs:
     - uses: actions/checkout@v1
     - name: Setup Dotnet for use with actions
       uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 2.2.301
     - name: Pack
       run: dotnet pack -c Release -p:PackageOutputPath="$env:GITHUB_WORKSPACE/out/packages" -p:ContinuousIntegrationBuild=true -p:BuildType=tagged
     - name: Upload artifact

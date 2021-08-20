@@ -14,7 +14,7 @@ namespace NXPorts
 
         public SysInterop.CallingConvention CallingConvention { get; private set; }
 
-        ExportDefinition(MethodDef methodDefinition, SysInterop.CallingConvention callingConvention, string alias)
+        private ExportDefinition(MethodDef methodDefinition, SysInterop.CallingConvention callingConvention, string alias)
         {
             MethodDefinition = methodDefinition ?? throw new ArgumentNullException(nameof(methodDefinition));
             CallingConvention = callingConvention;
@@ -29,7 +29,7 @@ namespace NXPorts
                 throw new ArgumentNullException(nameof(attributeRef));
 
             var alias = method.Name;
-            if(TryGetCustomExportAlias(attributeRef, out var customAlias))
+            if (TryGetCustomExportAlias(attributeRef, out var customAlias))
             {
                 alias = customAlias;
             }
@@ -37,17 +37,17 @@ namespace NXPorts
             return new ExportDefinition(method, callingConvention, alias);
         }
 
-        static SysInterop.CallingConvention GetCallingConvention(CustomAttribute attributeRef)
+        private static SysInterop.CallingConvention GetCallingConvention(CustomAttribute attributeRef)
         {
-            var callingConvCA = attributeRef.ConstructorArguments.Where(ca => ca.Type.FullName == typeof(SysInterop.CallingConvention).FullName).First();
-            return (SysInterop.CallingConvention) callingConvCA.Value;
+            var callingConvCA = attributeRef.ConstructorArguments.First(ca => ca.Type.FullName == typeof(SysInterop.CallingConvention).FullName);
+            return (SysInterop.CallingConvention)callingConvCA.Value;
         }
 
-        static bool TryGetCustomExportAlias(CustomAttribute attributeRef, out string customAlias)
+        private static bool TryGetCustomExportAlias(CustomAttribute attributeRef, out string customAlias)
         {
             customAlias = "";
-            var CA = attributeRef.ConstructorArguments.Where(ca => ca.Type.TypeName == "String").First();
-            if(CA.Value is object)
+            var CA = attributeRef.ConstructorArguments.First(ca => ca.Type.TypeName == "String");
+            if (CA.Value is object)
             {
                 customAlias = CA.Value.ToString();
                 return true;
@@ -59,16 +59,19 @@ namespace NXPorts
         public bool TryApproximateMethodSourcePosition(out SourcePosition sourcePosition)
         {
             sourcePosition = null;
-            var firstILInstruction = this.MethodDefinition.Body.Instructions.First();
+            var firstILInstruction = MethodDefinition.Body.Instructions.First();
             var sequencePoint = firstILInstruction.SequencePoint;
-            if (sequencePoint != null) {
+            if (sequencePoint != null)
+            {
                 sourcePosition = new SourcePosition(
                     filePath: sequencePoint.Document.Url,
                     line: sequencePoint.StartLine - 1,
                     column: sequencePoint.StartColumn
                 );
                 return true;
-            } else {
+            }
+            else
+            {
                 return false;
             }
         }
@@ -87,7 +90,7 @@ namespace NXPorts
             {
                 return false;
             }
-            return this.Alias.Equals(other.Alias, StringComparison.InvariantCultureIgnoreCase);
+            return Alias.Equals(other.Alias, StringComparison.InvariantCultureIgnoreCase);
         }
         public override bool Equals(object obj)
         {

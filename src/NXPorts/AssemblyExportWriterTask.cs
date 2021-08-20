@@ -55,19 +55,21 @@ namespace NXPorts
                 RemoveToxicDebuggableAttribute(sourceAssembly.Module);
 
                 Log.LogMessage(MessageImportance.Low, "Adjusting PE32 header to reflect the reweaving changes to the assembly file.");
-                var moduleWriterOptions = new ModuleWriterOptions(sourceAssembly.Module);
-                moduleWriterOptions.WritePdb = true;
+                var moduleWriterOptions = new ModuleWriterOptions(sourceAssembly.Module)
+                {
+                    WritePdb = true
+                };
                 moduleWriterOptions.Cor20HeaderOptions.Flags = StrictenCor20HeaderFlags(moduleWriterOptions.Cor20HeaderOptions.Flags);
                 moduleWriterOptions.Cor20HeaderOptions.Flags &= ~ComImageFlags.ILOnly;
                 moduleWriterOptions.PEHeadersOptions.Characteristics |= Characteristics.Dll;
 
-                using (FileStream outputStream = File.OpenWrite(outputPath))
+                using (var outputStream = File.OpenWrite(outputPath))
                 {
                     Log.LogMessage(MessageImportance.Low, "Writing the new assembly file to disk...");
                     sourceAssembly.Module.Write(outputStream, moduleWriterOptions);
                     Log.LogMessage(MessageImportance.Normal, $"Successfully rewritten assembly at '{outputPath}'.");
                 }
-            } 
+            }
             else
             {
                 Log.LogWarning("No method annotations for export reweaving were found.");
@@ -119,7 +121,7 @@ namespace NXPorts
         private static ComImageFlags? StrictenCor20HeaderFlags(ComImageFlags? comImageFlags)
         {
             if (comImageFlags.HasValue && comImageFlags.Value.HasFlag(ComImageFlags.Bit32Preferred))
-                return ( comImageFlags & ~ComImageFlags.Bit32Preferred ) | ComImageFlags.Bit32Required;
+                return (comImageFlags & ~ComImageFlags.Bit32Preferred) | ComImageFlags.Bit32Required;
             else
                 return comImageFlags;
         }

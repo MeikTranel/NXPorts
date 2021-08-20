@@ -17,9 +17,14 @@ jobs:
     - name: Setup Dotnet for use with actions
       uses: actions/setup-dotnet@v1
     - name: Test
-      run: dotnet test -c Release -p:EnableCoverage=true --logger:"console;verbosity=normal" -p:ContinuousIntegrationBuild=true -p:BuildType=canary
+      run: dotnet test -c Release -p:EnableCoverage=true -p:ContinuousIntegrationBuild=true -p:BuildType=canary
     - name: Pack
       run: dotnet pack -c Release -p:PackageOutputPath="$env:GITHUB_WORKSPACE/out/packages" -p:ContinuousIntegrationBuild=true -p:BuildType=canary
+    - name: Upload Code Coverage
+      uses: codecov/codecov-action@v2
+      with:
+        files: tests/**/*.opencover.xml
+        verbose: true
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
