@@ -1,5 +1,6 @@
 using Buildalyzer;
 using Buildalyzer.Environment;
+using Microsoft.Build.Evaluation;
 using Microsoft.Build.Utilities.ProjectCreation;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -84,16 +85,21 @@ namespace NXPorts.Tests.Infrastructure
                 return CreateTestDLL(assemblyName, csharpDocuments, Platform.X86);
         }
 
-        public ProjectCreator SetupNXPortsProject(string projectFilePath = "./test.csproj", string targetFramework = "net48")
+        public ProjectCreator SetupNXPortsProject(string projectFilePath, string targetFramework = "net48")
         {
             var dir = GetApplicationDirectory();
             File.WriteAllText(GetAbsolutePath("Directory.Build.props"), "<Project />");
             File.WriteAllText(GetAbsolutePath("Directory.Build.targets"), "<Project />");
+            var feed = PackageFeed.Create(GetAbsolutePath("feed/"))
+                .Package("NXPorts", "199.199.199")
+                .FileText("build/NXPorts.targets", File.ReadAllText(Path.Combine(dir, "build", "NXPorts.targets")))
+                .Save();
             return ProjectCreator.Templates.SdkCsproj(projectFilePath, targetFramework: targetFramework)
+                .Property("RestoreSources", "./feed;$(RestoreSources)")
                 .Property("NXPortsTaskAssemblyDirectory", dir + "\\")
                 .Property("PlatformTarget", Environment.Is64BitProcess ? "x64" : "x86")
-                .ItemReference(new Uri(Assembly.GetAssembly(typeof(DllExportAttribute)).CodeBase).LocalPath)
-                .Import(Path.Combine(dir, "Build", "NXPorts.targets"));
+                .ItemPackageReference(feed.Packages.First())
+                .ItemReference(new Uri(Assembly.GetAssembly(typeof(DllExportAttribute)).CodeBase).LocalPath);
         }
 
         public void CopyFileFromTestFiles(string relativeTestFilesPath, string destinationPath)

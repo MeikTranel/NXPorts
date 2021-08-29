@@ -10,7 +10,7 @@ namespace NXPorts
 
         public SourcePosition(string filePath)
         {
-            this.FilePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
+            FilePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
         }
 
         public SourcePosition(string filePath, int line, int column) : this(filePath)

@@ -5,7 +5,6 @@ using SysInterop = System.Runtime.InteropServices;
 
 namespace NXPorts
 {
-    // TODO: Make internal again
     public sealed class ExportDefinition : IEquatable<ExportDefinition>
     {
         public MethodDef MethodDefinition { get; }

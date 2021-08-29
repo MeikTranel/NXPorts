@@ -6,7 +6,6 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NETFX-OldCSProj\NETFX-OldCSProj.csproj" />
     <ProjectReference Include="..\NETFX_SDKCSProj\NETFX_SDKCSProj.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Content</OutputItemType>
