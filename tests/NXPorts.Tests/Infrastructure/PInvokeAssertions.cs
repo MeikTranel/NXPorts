@@ -8,14 +8,14 @@ namespace NXPorts.Tests.Infrastructure
     {
         internal static class UnsafeNativeMethods
         {
-            [DllImport("kernel32.dll", SetLastError = true)]
+            [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Ansi)]
             public static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
 
             [DllImport("kernel32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool FreeLibrary(IntPtr hModule);
 
-            [DllImport("kernel32.dll", SetLastError = true)]
+            [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
             public static extern IntPtr LoadLibrary(string lpFileName);
         }
 
@@ -24,9 +24,15 @@ namespace NXPorts.Tests.Infrastructure
 #pragma warning restore IDE0060 // Remove unused parameter
             where TDelegate : Delegate
         {
-            if (action is null) throw new ArgumentNullException(nameof(action));
+            if (action is null)
+                throw new ArgumentNullException(nameof(action));
             var dllHandle = UnsafeNativeMethods.LoadLibrary(filePath);
+            if (dllHandle == IntPtr.Zero)
+                throw new AssertFailedException("Could not load library");
             var procedureAddress = UnsafeNativeMethods.GetProcAddress(dllHandle, expectedFunctionAlias);
+            if (procedureAddress == IntPtr.Zero)
+                throw new AssertFailedException("Could not load export.");
+
             try
             {
                 var pInvokeDelegate = Marshal.GetDelegateForFunctionPointer<TDelegate>(procedureAddress);

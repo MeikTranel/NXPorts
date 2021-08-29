@@ -1,0 +1,10 @@
+codecov:
+  require_ci_to_pass: yes
+
+comment:
+  layout: "diff,files"
+
+coverage:
+  status:
+    patch: false
+

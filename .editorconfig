@@ -22,6 +22,12 @@ tab_width = 4
 # Localization seems to be overkill for this package at the moment
 dotnet_diagnostic.CA1303.severity = none
 
+# Make sure string.Format methods are balanced
+dotnet_diagnostic.CA2241.severity=warning
+
+# Been there - done that.
+dotnet_diagnostic.CA2245.severity=warning
+
 # Code Style
 
 # Default severity for analyzer diagnostics with category 'Style'
@@ -37,3 +43,9 @@ csharp_style_var_elsewhere = true
 
 # Prefer if/else returns over single line symbol hell
 dotnet_style_prefer_conditional_expression_over_return=false:silent
+
+# IDE0063: Use simple 'using' statement
+dotnet_diagnostic.IDE0063.severity = silent
+
+# IDE0072: Add missing cases
+dotnet_diagnostic.IDE0072.severity = silent

@@ -1,17 +1,20 @@
-﻿using NETFX_OldCSProj;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 namespace TestConsumer
 {
-    class Program
+    internal class Program
     {
         [DllImport("NETFX_SDKCSProj.dll")]
-        public extern static void DoSomething();
+        public static extern void DoSomething();
+
+        [DllImport("NETFX-OldCSProj.dll", EntryPoint = "PINVOKE_Rocks")]
+        public static extern void DoSomething2ElectricBogaloo();
+
         private static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            Exports.DoSomething2ElectricBogaloo();
+            DoSomething2ElectricBogaloo();
             DoSomething();
         }
     }

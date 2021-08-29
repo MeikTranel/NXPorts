@@ -67,7 +67,44 @@ namespace NXPorts.Tests
                 {
                     Assert.Inconclusive("Failed to retrieve build results");
                 }
+            }
+        }
 
+        [TestMethod]
+        public void The_attributes_assembly_file_does_not_end_up_in_the_build_output_in_subsequent_builds()
+        {
+            using (var testEnv = new TestEnvironment())
+            {
+                testEnv.SetupNXPortsProject(testEnv.GetAbsolutePath("./sdknet48.csproj")).Save();
+                testEnv.CopyFileFromTestFiles("Simple.cs");
+
+                var (AnalyzerResults, _) = testEnv.Build(testEnv.GetAbsolutePath("./sdknet48.csproj"));
+                Assert.IsTrue(AnalyzerResults.OverallSuccess, "The build failed.");
+                if (AnalyzerResults.TryGetTargetFramework("net48", out var net48results))
+                {
+                    Assert.IsFalse(
+                        File.Exists(Path.Combine(Path.GetDirectoryName(net48results.Properties["TargetDir"]), "NXPorts.Attributes.dll")),
+                        "NXPorts wasn't removed the from the build output."
+                    );
+                }
+                else
+                {
+                    Assert.Inconclusive("Failed to retrieve build results");
+                }
+
+                var (SubsequentBuildAnalyzerResult, _) = testEnv.Build(testEnv.GetAbsolutePath("./sdknet48.csproj"), clean: false);
+                Assert.IsTrue(AnalyzerResults.OverallSuccess, "The build failed.");
+                if (SubsequentBuildAnalyzerResult.TryGetTargetFramework("net48", out var subsequentBuildResults))
+                {
+                    Assert.IsFalse(
+                        File.Exists(Path.Combine(Path.GetDirectoryName(subsequentBuildResults.Properties["TargetDir"]), "NXPorts.Attributes.dll")),
+                        "NXPorts wasn't removed from the build output after a subsequent build."
+                    );
+                }
+                else
+                {
+                    Assert.Inconclusive("Failed to retrieve build results");
+                }
             }
         }
     }

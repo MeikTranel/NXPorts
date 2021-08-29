@@ -21,7 +21,6 @@ namespace NXPorts
         [Output]
         public string OutputPath { get; private set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "We need this as a guard clause to capture and wrap all uncaught errors")]
         public override bool Execute()
         {
             try
@@ -130,20 +129,14 @@ namespace NXPorts
             SysInterop.CallingConvention callingConvention
         )
         {
-            switch (callingConvention)
+            return callingConvention switch
             {
-                case SysInterop.CallingConvention.Cdecl:
-                    return "CallConvCdecl";
-                case SysInterop.CallingConvention.ThisCall:
-                    return "CallConvThiscall";
-                case SysInterop.CallingConvention.StdCall:
-                    return "CallConvStdcall";
-                case SysInterop.CallingConvention.FastCall:
-                    return "CallConvFastcall";
-                case SysInterop.CallingConvention.Winapi:
-                default:
-                    throw new NotSupportedException($"{callingConvention} is not supported for Reverse PInvoke!");
-            }
+                SysInterop.CallingConvention.Cdecl => "CallConvCdecl",
+                SysInterop.CallingConvention.ThisCall => "CallConvThiscall",
+                SysInterop.CallingConvention.StdCall => "CallConvStdcall",
+                SysInterop.CallingConvention.FastCall => "CallConvFastcall",
+                _ => throw new NotSupportedException($"{callingConvention} is not supported for Reverse PInvoke!"),
+            };
         }
     }
 }

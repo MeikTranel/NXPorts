@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28516.95
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NXPorts.Tests", "tests\NXPorts.Tests\NXPorts.Tests.csproj", "{5568AC7F-00C8-41F2-A31B-6AD3F598FBEF}"
 EndProject
@@ -13,6 +13,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NETFX-OldCSProj", "samples\NETFX-OldCSProj\NETFX-OldCSProj.csproj", "{38F79E16-3E71-4F94-B40A-702F08FA1BAE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{4DD97514-9ED7-425D-A537-664EE3407F28}"
+	ProjectSection(SolutionItems) = preProject
+		samples\Directory.Build.props = samples\Directory.Build.props
+		samples\Directory.Build.targets = samples\Directory.Build.targets
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NETFX_SDKCSProj", "samples\NETFX_SDKCSProj\NETFX_SDKCSProj.csproj", "{FBB62A90-21B7-4AD0-966B-4E055F1C51E6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConsumer", "samples\TestConsumer\TestConsumer.csproj", "{ECDB16FF-63A8-44EC-A4CD-A51FD98D2C1F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,9 +44,20 @@ Global
 		{E48BB998-F383-4C7B-8F7A-605CB7BEA713}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E48BB998-F383-4C7B-8F7A-605CB7BEA713}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E48BB998-F383-4C7B-8F7A-605CB7BEA713}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38F79E16-3E71-4F94-B40A-702F08FA1BAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38F79E16-3E71-4F94-B40A-702F08FA1BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBB62A90-21B7-4AD0-966B-4E055F1C51E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBB62A90-21B7-4AD0-966B-4E055F1C51E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECDB16FF-63A8-44EC-A4CD-A51FD98D2C1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECDB16FF-63A8-44EC-A4CD-A51FD98D2C1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{38F79E16-3E71-4F94-B40A-702F08FA1BAE} = {4DD97514-9ED7-425D-A537-664EE3407F28}
+		{FBB62A90-21B7-4AD0-966B-4E055F1C51E6} = {4DD97514-9ED7-425D-A537-664EE3407F28}
+		{ECDB16FF-63A8-44EC-A4CD-A51FD98D2C1F} = {4DD97514-9ED7-425D-A537-664EE3407F28}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E0F337E7-4E41-4FCF-BBD5-1405022C4A25}

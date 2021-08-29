@@ -11,18 +11,24 @@
   <Target Name="WriteExports" Condition="$(DesignTimeBuild) != true">
     <AssemblyExportWriterTask InputAssembly="%(IntermediateAssembly.Identity)" OutputPath="%(IntermediateAssembly.Identity)" />
   </Target>
-  <Target Name="RemoveAttributesAssemblyFromOutputs">
+  <Target Name="NXPortsReweave" DependsOnTargets="CheckIncompatiblePlatformConfigurations;WriteExports" />
+
+  <PropertyGroup>
+    <TargetsTriggeredByCompilation>NXPortsReweave;$(TargetsTriggeredByCompilation)</TargetsTriggeredByCompilation>
+  </PropertyGroup>
+
+  <!-- Removing NXPorts.Attributes.dll from the dependency graph -->
+  <Target Name="NXPortsRemoveAttributesAssemblyFromOutputs">
     <!--
-      Once the export has been written, we have removed all references to the Attributes assembly,
+      Once the export has been written, we have removed all references to the attributes assembly,
       which means we don't need it anymore.
     -->
     <ItemGroup>
       <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)%(Extension)' == 'NXPorts.Attributes.dll'" />
     </ItemGroup>
   </Target>
-  <Target Name="NXPorts" DependsOnTargets="CheckIncompatiblePlatformConfigurations;WriteExports;RemoveAttributesAssemblyFromOutputs" />
 
   <PropertyGroup>
-    <TargetsTriggeredByCompilation>NXPorts;$(TargetsTriggeredByCompilation)</TargetsTriggeredByCompilation>
+    <PrepareForRunDependsOn>NXPortsRemoveAttributesAssemblyFromOutputs;$(PrepareForRunDependsOn)</PrepareForRunDependsOn>
   </PropertyGroup>
 </Project>

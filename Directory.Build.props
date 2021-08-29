@@ -16,6 +16,7 @@
     <DebugType>embedded</DebugType>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <!-- Customization -->
