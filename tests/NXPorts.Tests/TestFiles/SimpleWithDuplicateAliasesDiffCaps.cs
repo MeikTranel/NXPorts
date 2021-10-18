@@ -10,5 +10,11 @@ namespace NXPortsTests.TestFiles
         {
             Console.WriteLine("Test");
         }
+
+        [DllExport("doSomething")]
+        public static void DoSomething2()
+        {
+            Console.WriteLine("Test");
+        }
     }
 }

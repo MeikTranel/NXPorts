@@ -13,111 +13,105 @@ namespace NXPorts.Tests
         [TestMethod]
         public void ProducesAssemblyWithOneWorkingExport()
         {
-            using (var testEnv = new TestEnvironment())
-            {
-                var testCode = @"namespace Test {
-                                    public class TestClassA {
-                                        [NXPorts.Attributes.DllExport]
-                                        public static string DoSomething()
-                                        {
-                                            return ""TestReturnValue"";
-                                        }
+            var testEnv = new TestRoslynEnvironment();
+            var testCode = @"namespace Test {
+                                public class TestClassA {
+                                    [NXPorts.Attributes.DllExport]
+                                    public static string DoSomething()
+                                    {
+                                        return ""TestReturnValue"";
                                     }
-                                }";
-                if (!testEnv.CreateTestDLL("test", new[] { testCode }))
-                    Assert.Fail("Test compile failed.");
+                                }
+                            }";
+            if (!testEnv.CreateTestDLL("test", new[] { testCode }))
+                Assert.Fail("Test compile failed.");
 
-                using (var testExportAttributedAssembly = new ExportAttributedAssembly(testEnv.GetAbsolutePath("./test.dll")))
+            using (var testExportAttributedAssembly = new ExportAttributedAssembly(testEnv.GetAbsolutePath("./test.dll")))
+            {
+                var writer = new AssemblyExportWriterTask
                 {
-                    var writer = new AssemblyExportWriterTask
-                    {
-                        BuildEngine = BuildEngine.Create()
-                    };
-                    writer.Write(testExportAttributedAssembly, testEnv.GetAbsolutePath("./test.dll"));
-                }
-
-                Assert.That.RunsWithoutError<DoSomethingDelegate>(
-                    testEnv.GetAbsolutePath("./test.dll"),
-                    "DoSomething",
-                    resolvedDoSomethingDelegate =>
-                    {
-                        Assert.AreEqual("TestReturnValue", resolvedDoSomethingDelegate());
-                    }
-                );
+                    BuildEngine = BuildEngine.Create()
+                };
+                writer.Write(testExportAttributedAssembly, testEnv.GetAbsolutePath("./test.dll"));
             }
+
+            Assert.That.RunsWithoutError<DoSomethingDelegate>(
+                testEnv.GetAbsolutePath("./test.dll"),
+                "DoSomething",
+                resolvedDoSomethingDelegate =>
+                {
+                    Assert.AreEqual("TestReturnValue", resolvedDoSomethingDelegate());
+                }
+            );
         }
 
 
         [TestMethod]
         public void ProducesAssemblyWithoutExportAttributes()
         {
-            using (var testEnv = new TestEnvironment())
+            var testEnv = new TestRoslynEnvironment();
+            var testCode = @"namespace Test {
+                                public class TestClassA {
+                                    [NXPorts.Attributes.DllExport]
+                                    public static void DoSomething() { }
+                                }
+                            }";
+            if (!testEnv.CreateTestDLL("test", new[] { testCode }))
+                Assert.Fail("Test compile failed.");
+
+            using (var testExportAttributedAssembly = new ExportAttributedAssembly(testEnv.GetAbsolutePath("./test.dll")))
             {
-                var testCode = @"namespace Test {
-                                    public class TestClassA {
-                                        [NXPorts.Attributes.DllExport]
-                                        public static void DoSomething() { }
-                                    }
-                                }";
-                if (!testEnv.CreateTestDLL("test", new[] { testCode }))
-                    Assert.Fail("Test compile failed.");
-
-                using (var testExportAttributedAssembly = new ExportAttributedAssembly(testEnv.GetAbsolutePath("./test.dll")))
+                var writer = new AssemblyExportWriterTask
                 {
-                    var writer = new AssemblyExportWriterTask
-                    {
-                        BuildEngine = BuildEngine.Create()
-                    };
-                    writer.Write(testExportAttributedAssembly, testEnv.GetAbsolutePath("./test.dll"));
-                }
+                    BuildEngine = BuildEngine.Create()
+                };
+                writer.Write(testExportAttributedAssembly, testEnv.GetAbsolutePath("./test.dll"));
+            }
 
-                using (var resultModule = ModuleDefMD.Load(testEnv.GetAbsolutePath("./test.dll")))
-                {
-                    var methodsWithOffendingAttribute = from t in resultModule.Types
-                                                        from m in t.Methods
-                                                        from ca in m.CustomAttributes
-                                                        where ca.TypeFullName == typeof(Attributes.DllExportAttribute).FullName
-                                                        select m;
+            using (var resultModule = ModuleDefMD.Load(testEnv.GetAbsolutePath("./test.dll")))
+            {
+                var methodsWithOffendingAttribute = from t in resultModule.Types
+                                                    from m in t.Methods
+                                                    from ca in m.CustomAttributes
+                                                    where ca.TypeFullName == typeof(Attributes.DllExportAttribute).FullName
+                                                    select m;
 
-                    Assert.AreEqual(0, methodsWithOffendingAttribute.Count(), $"Assembly was left with one ore more {nameof(Attributes.DllExportAttribute)} occurences.");
-                }
+                Assert.AreEqual(0, methodsWithOffendingAttribute.Count(), $"Assembly was left with one ore more {nameof(Attributes.DllExportAttribute)} occurences.");
             }
         }
 
         [TestMethod]
         public void ProducesAssemblyWithoutAnyReferenceToNXPortAttributes()
         {
-            using (var testEnv = new TestEnvironment())
-            {
-                var testCode = @"namespace Test {
-                                    public class TestClassA {
-                                        [NXPorts.Attributes.DllExport]
-                                        public static void DoSomething()
-                                        {
-                                        }
+            var testEnv = new TestRoslynEnvironment();
+            var testCode = @"namespace Test {
+                                public class TestClassA {
+                                    [NXPorts.Attributes.DllExport]
+                                    public static void DoSomething()
+                                    {
                                     }
-                                }";
-                if (!testEnv.CreateTestDLL("test", new[] { testCode }))
-                    Assert.Fail("Test compile failed.");
+                                }
+                            }";
+            if (!testEnv.CreateTestDLL("test", new[] { testCode }))
+                Assert.Fail("Test compile failed.");
 
-                using (var testExportAttributedAssembly = new ExportAttributedAssembly(testEnv.GetAbsolutePath("./test.dll")))
+            using (var testExportAttributedAssembly = new ExportAttributedAssembly(testEnv.GetAbsolutePath("./test.dll")))
+            {
+                var writer = new AssemblyExportWriterTask
                 {
-                    var writer = new AssemblyExportWriterTask
-                    {
-                        BuildEngine = BuildEngine.Create()
-                    };
-                    writer.Write(testExportAttributedAssembly, testEnv.GetAbsolutePath("./testOut.dll"));
-                }
+                    BuildEngine = BuildEngine.Create()
+                };
+                writer.Write(testExportAttributedAssembly, testEnv.GetAbsolutePath("./testOut.dll"));
+            }
 
-                using (var resultModule = ModuleDefMD.Load(testEnv.GetAbsolutePath("./testOut.dll")))
-                {
-                    var simpleNameOfAttributeAssembly = typeof(Attributes.DllExportAttribute).Assembly.GetName().Name;
-                    Assert.AreEqual(
-                        null,
-                        resultModule.GetAssemblyRef(simpleNameOfAttributeAssembly),
-                        $"Assembly was left with a reference to assembly '{simpleNameOfAttributeAssembly}'."
-                    );
-                }
+            using (var resultModule = ModuleDefMD.Load(testEnv.GetAbsolutePath("./testOut.dll")))
+            {
+                var simpleNameOfAttributeAssembly = typeof(Attributes.DllExportAttribute).Assembly.GetName().Name;
+                Assert.AreEqual(
+                    null,
+                    resultModule.GetAssemblyRef(simpleNameOfAttributeAssembly),
+                    $"Assembly was left with a reference to assembly '{simpleNameOfAttributeAssembly}'."
+                );
             }
         }
     }

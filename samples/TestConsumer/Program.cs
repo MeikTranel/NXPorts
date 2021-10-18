@@ -11,7 +11,7 @@ namespace TestConsumer
         [DllImport("NETFX-OldCSProj.dll", EntryPoint = "PINVOKE_Rocks")]
         public static extern void DoSomething2ElectricBogaloo();
 
-        private static void Main(string[] args)
+        private static void Main()
         {
             Console.WriteLine("Hello World!");
             DoSomething2ElectricBogaloo();

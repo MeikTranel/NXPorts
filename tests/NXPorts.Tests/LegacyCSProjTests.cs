@@ -6,14 +6,14 @@ using System.IO;
 namespace NXPorts.Tests
 {
     [TestClass]
-    public class SdkBasedCSProjTests
+    public class LegacyCSProjTests
     {
         [TestMethod]
-        public void Building_a_simple_SDK_based_project_with_exports_succeeds()
+        public void Building_a_legacy_csproj_with_exports_succeeds()
         {
-            var (testEnv, proj) = TestBuildEnvironment.SetupEnvironmentWithSdkProject();
+            var (testEnv, proj) = TestBuildEnvironment.SetupEnvironmentWithLegacyProject();
+            testEnv.CopyFileFromTestFilesAndAddToCompileItems(proj, "Simple.cs");
             proj.Save();
-            testEnv.CopyFileFromTestFiles("Simple.cs");
 
             var (AnalyzerResults, _) = testEnv.Build(proj);
 
@@ -31,11 +31,11 @@ namespace NXPorts.Tests
         }
 
         [TestMethod]
-        public void Building_a_simple_SDK_based_project_with_duplicate_export_aliases_fails()
+        public void Building_a_legacy_csproj_with_duplicate_export_aliases_fails()
         {
-            var (testEnv, proj) = TestBuildEnvironment.SetupEnvironmentWithSdkProject();
+            var (testEnv, proj) = TestBuildEnvironment.SetupEnvironmentWithLegacyProject();
+            testEnv.CopyFileFromTestFilesAndAddToCompileItems(proj, "SimpleWithDuplicateAliases.cs");
             proj.Save();
-            testEnv.CopyFileFromTestFiles("SimpleWithDuplicateAliases.cs");
 
             var (AnalyzerResults, _) = testEnv.Build(proj);
 
@@ -43,12 +43,13 @@ namespace NXPorts.Tests
         }
 
         [TestMethod]
-        public void Building_a_simple_SDK_based_project_with_inexact_duplicate_export_aliases_fails()
+        public void Building_a_legacy_csproj_with_inexact_duplicate_export_aliases_fails()
         {
-            var (testEnv, proj) = TestBuildEnvironment.SetupEnvironmentWithSdkProject();
-            proj.Property("NXPortsAllowCaseSensitiveDuplicates", "false");
+            var (testEnv, proj) = TestBuildEnvironment.SetupEnvironmentWithLegacyProject();
+            testEnv.CopyFileFromTestFilesAndAddToCompileItems(proj, "SimpleWithDuplicateAliasesDiffCaps.cs");
+            proj.PropertyGroup()
+                .Property("NXPortsAllowCaseSensitiveDuplicates", "false");
             proj.Save();
-            testEnv.CopyFileFromTestFiles("SimpleWithDuplicateAliasesDiffCaps.cs");
 
             var (AnalyzerResults, _) = testEnv.Build(proj);
 
@@ -56,11 +57,12 @@ namespace NXPorts.Tests
         }
 
         [TestMethod]
-        public void Building_a_simple_SDK_based_project_with_inexact_duplicate_export_and_relaxed_duplicate_rules_aliases_succeeds()
+        public void Building_a_legacy_csproj_with_inexact_duplicate_export_and_relaxed_duplicate_rules_aliases_succeeds()
         {
-            var (testEnv, proj) = TestBuildEnvironment.SetupEnvironmentWithSdkProject();
+
+            var (testEnv, proj) = TestBuildEnvironment.SetupEnvironmentWithLegacyProject();
+            testEnv.CopyFileFromTestFilesAndAddToCompileItems(proj, "SimpleWithDuplicateAliasesDiffCaps.cs");
             proj.Save();
-            testEnv.CopyFileFromTestFiles("SimpleWithDuplicateAliasesDiffCaps.cs");
 
             var (AnalyzerResults, _) = testEnv.Build(proj);
 
@@ -70,11 +72,11 @@ namespace NXPorts.Tests
         [TestMethod]
         public void Designtime_builds_of_NXPorts_enabled_projects_do_not_error()
         {
-            var (testEnv, proj) = TestBuildEnvironment.SetupEnvironmentWithSdkProject();
+            var (testEnv, proj) = TestBuildEnvironment.SetupEnvironmentWithLegacyProject();
+            testEnv.CopyFileFromTestFilesAndAddToCompileItems(proj, "Simple.cs");
             proj.Save();
-            testEnv.CopyFileFromTestFiles("Simple.cs");
 
-            var (AnalyzerResults, _) = testEnv.Build(proj, designTime: true);
+            var (AnalyzerResults, _) = testEnv.Build(proj, true);
 
             Assert.IsTrue(AnalyzerResults.OverallSuccess, "The designtime build failed.");
         }
@@ -82,12 +84,11 @@ namespace NXPorts.Tests
         [TestMethod]
         public void The_attributes_assembly_file_does_not_end_up_in_the_build_output()
         {
-            var (testEnv, proj) = TestBuildEnvironment.SetupEnvironmentWithSdkProject();
+            var (testEnv, proj) = TestBuildEnvironment.SetupEnvironmentWithLegacyProject();
+            testEnv.CopyFileFromTestFilesAndAddToCompileItems(proj, "Simple.cs");
             proj.Save();
-            testEnv.CopyFileFromTestFiles("Simple.cs");
 
             var (AnalyzerResults, _) = testEnv.Build(proj);
-
             Assert.IsTrue(AnalyzerResults.OverallSuccess, "The build failed.");
             if (AnalyzerResults.TryGetTargetFramework("net48", out var net48results))
             {
@@ -105,9 +106,9 @@ namespace NXPorts.Tests
         [TestMethod]
         public void The_attributes_assembly_file_does_not_end_up_in_the_build_output_in_subsequent_builds()
         {
-            var (testEnv, proj) = TestBuildEnvironment.SetupEnvironmentWithSdkProject();
+            var (testEnv, proj) = TestBuildEnvironment.SetupEnvironmentWithLegacyProject();
+            testEnv.CopyFileFromTestFilesAndAddToCompileItems(proj, "Simple.cs");
             proj.Save();
-            testEnv.CopyFileFromTestFiles("Simple.cs");
 
             var (AnalyzerResults, _) = testEnv.Build(proj);
             Assert.IsTrue(AnalyzerResults.OverallSuccess, "The build failed.");

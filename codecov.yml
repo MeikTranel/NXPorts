@@ -8,3 +8,6 @@ coverage:
   status:
     patch: false
 
+ignore:
+  - "tests/*"
+  - "**/*.Designer.cs"

@@ -2,10 +2,25 @@
   <PropertyGroup>
     <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-
     <NuspecFile>$(MSBuildThisFileDirectory)$(MSbuildProjectName).nuspec</NuspecFile>
     <NoPackageAnalysis>true</NoPackageAnalysis>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="build\NXPorts.props" />
+    <None Remove="build\NXPorts.targets" />
+    <Content Include="build\NXPorts.props">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="build\NXPorts.targets">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NXPorts.Attributes\NXPorts.Attributes.csproj" />
@@ -14,26 +29,19 @@
     <PackageReference Include="dnLib" Version="3.3.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="build\NXPorts.targets">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
   <!-- Set NuSpec input variables -->
   <Target Name="SetNuSpecProps" BeforeTargets="GenerateNuSpec">
-  <PropertyGroup>
-    <NuspecProperties>$(NuspecProperties);title=$(Title)</NuspecProperties>
-    <NuspecProperties>$(NuspecProperties);id=$(PackageId)</NuspecProperties>
-    <NuspecProperties>$(NuspecProperties);description=$(Description)</NuspecProperties>
-    <NuspecProperties>$(NuspecProperties);version=$(Version)</NuspecProperties>
-    <NuspecProperties>$(NuspecProperties);authors=$(Authors)</NuspecProperties>
-    <NuspecProperties>$(NuspecProperties);licenseExp=$(PackageLicenseExpression)</NuspecProperties>
-    <NuspecProperties>$(NuspecProperties);configuration=$(Configuration)</NuspecProperties>
-    <NuspecProperties>$(NuspecProperties);projectUrl=$(PackageProjectUrl)</NuspecProperties>
-    <NuspecProperties>$(NuspecProperties);repositoryUrl=$(RepositoryUrl)</NuspecProperties>
-    <NuspecProperties>$(NuspecProperties);commitHash=$(RepositoryCommit)</NuspecProperties>
-  </PropertyGroup>
+    <PropertyGroup>
+      <NuspecProperties>$(NuspecProperties);title=$(Title)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);id=$(PackageId)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);description=$(Description)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);version=$(Version)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);authors=$(Authors)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);licenseExp=$(PackageLicenseExpression)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);configuration=$(Configuration)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);projectUrl=$(PackageProjectUrl)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);repositoryUrl=$(RepositoryUrl)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);commitHash=$(RepositoryCommit)</NuspecProperties>
+    </PropertyGroup>
   </Target>
-
 </Project>

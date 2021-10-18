@@ -19,8 +19,8 @@ tab_width = 4
 
 # Code Quality
 
-# Localization seems to be overkill for this package at the moment
-dotnet_diagnostic.CA1303.severity = none
+# CA1303: Do not pass literals as localized parameters
+dotnet_diagnostic.CA1303.severity = warning
 
 # Make sure string.Format methods are balanced
 dotnet_diagnostic.CA2241.severity=warning
@@ -49,3 +49,7 @@ dotnet_diagnostic.IDE0063.severity = silent
 
 # IDE0072: Add missing cases
 dotnet_diagnostic.IDE0072.severity = silent
+
+# IDE0130: Namespace does not match folder structure
+# Analyzer is buggy atm - TODO: try to reenable it with dotnet6-sdk
+dotnet_diagnostic.IDE0130.severity = silent

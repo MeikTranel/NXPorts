@@ -8,6 +8,7 @@ using NXPorts.Attributes;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using SysInterop = System.Runtime.InteropServices;
 
 namespace NXPorts
@@ -21,14 +22,30 @@ namespace NXPorts
         [Output]
         public string OutputPath { get; private set; }
 
+        [Required]
+        public bool AllowCaseSensitiveDuplicates { get; private set; }
+
+
+        public AssemblyExportWriterTask()
+        {
+            TaskResources = Properties.Resources.ResourceManager;
+        }
+
         public override bool Execute()
         {
             try
             {
                 using (var expAttributedAssembly = new ExportAttributedAssembly(InputAssembly))
                 {
-                    Log.LogMessage(MessageImportance.Normal, $"Found {expAttributedAssembly.ExportDefinitions.Count} annotated method(s) ready for reweaving.");
-                    Write(expAttributedAssembly, OutputPath);
+                    if (!ValidateAttributedAssembly(expAttributedAssembly))
+                    {
+                        Log.LogErrorFromResources("Log_ValidationFailAborting");
+                    }
+                    else
+                    {
+                        Log.LogMessage(MessageImportance.Normal, $"Found {expAttributedAssembly.ExportDefinitions.Count} annotated method(s) ready for reweaving.");
+                        Write(expAttributedAssembly, OutputPath);
+                    }
                 }
             }
             catch (Exception e)
@@ -38,6 +55,55 @@ namespace NXPorts
             return !Log.HasLoggedErrors;
         }
 
+        #region Validation
+        private bool ValidateAttributedAssembly(ExportAttributedAssembly expAttributedAssembly)
+        {
+            return !AssemblyContainsDuplicateExportAliases(expAttributedAssembly) &&
+                    PassesCaseInsensitiveAliasesCheck(expAttributedAssembly);
+        }
+
+        private bool PassesCaseInsensitiveAliasesCheck(ExportAttributedAssembly expAttributedAssembly)
+        {
+            var groupedExports = expAttributedAssembly.ExportDefinitions.GroupBy(def => def.Alias, StringComparer.InvariantCultureIgnoreCase);
+            if (groupedExports.Any(d => d.Count() >= 2))
+            {
+                foreach (var group in groupedExports.Where(d => d.Count() >= 2))
+                {
+                    if (AllowCaseSensitiveDuplicates)
+                        Log.LogWarningWithCodeFromResources(Diagnostics.DuplicateAliasesWithDifferentCaps.MessageResourceKey, group.Key);
+                    else
+                        Log.LogErrorWithCodeFromResources(Diagnostics.DuplicateAliases.MessageResourceKey, group.Key);
+                }
+                if (AllowCaseSensitiveDuplicates)
+                    return true;
+                else
+                    return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private bool AssemblyContainsDuplicateExportAliases(ExportAttributedAssembly expAttributedAssembly)
+        {
+            var groupedExports = expAttributedAssembly.ExportDefinitions.GroupBy(def => def.Alias, StringComparer.InvariantCulture);
+            if (groupedExports.Any(d => d.Count() >= 2))
+            {
+                foreach (var group in groupedExports.Where(d => d.Count() >= 2))
+                {
+                    Log.LogErrorWithCodeFromResources(Diagnostics.DuplicateAliases.MessageResourceKey, group.Key);
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        #endregion
+
+        #region Reweaving/Writing
         public void Write(ExportAttributedAssembly sourceAssembly, string outputPath)
         {
             if (sourceAssembly == null)
@@ -50,10 +116,10 @@ namespace NXPorts
                     RewriteAnnotatedMethod(sourceAssembly, exportDefinition);
                 }
 
-                Log.LogMessage(MessageImportance.Low, "Clearing assembly of incompatible assembly flags.");
+                Log.LogMessageFromResources(MessageImportance.Low, "Log_ClearingFlags");
                 RemoveToxicDebuggableAttribute(sourceAssembly.Module);
 
-                Log.LogMessage(MessageImportance.Low, "Adjusting PE32 header to reflect the reweaving changes to the assembly file.");
+                Log.LogMessageFromResources(MessageImportance.Low, "Log_AdjustingPE32Header");
                 var moduleWriterOptions = new ModuleWriterOptions(sourceAssembly.Module)
                 {
                     WritePdb = true
@@ -64,20 +130,20 @@ namespace NXPorts
 
                 using (var outputStream = File.OpenWrite(outputPath))
                 {
-                    Log.LogMessage(MessageImportance.Low, "Writing the new assembly file to disk...");
+                    Log.LogMessageFromResources(MessageImportance.Low, "Log_WritingToDisk");
                     sourceAssembly.Module.Write(outputStream, moduleWriterOptions);
-                    Log.LogMessage(MessageImportance.Normal, $"Successfully rewritten assembly at '{outputPath}'.");
+                    Log.LogMessageFromResources(MessageImportance.Normal, "Log_SuccessWrittenAt", outputPath);
                 }
             }
             else
             {
-                Log.LogWarning("No method annotations for export reweaving were found.");
+                Log.LogWarningWithCodeFromResources("Diag_NoMethodAnnotationsFoundMessage");
             }
         }
 
         private void RewriteAnnotatedMethod(ExportAttributedAssembly sourceAssembly, ExportDefinition exportDefinition)
         {
-            var message = $"Reweaving method '{exportDefinition.MethodDefinition.FullName}' with alias '{exportDefinition.Alias}' and calling convention '{exportDefinition.CallingConvention}'";
+            var message = string.Format(Properties.Resources.Log_ReweavingMethod, exportDefinition.MethodDefinition.FullName, exportDefinition.Alias, exportDefinition.CallingConvention);
             if (exportDefinition.TryApproximateMethodSourcePosition(out var sourcePosition))
             {
                 Log.LogMessage(
@@ -135,8 +201,9 @@ namespace NXPorts
                 SysInterop.CallingConvention.ThisCall => "CallConvThiscall",
                 SysInterop.CallingConvention.StdCall => "CallConvStdcall",
                 SysInterop.CallingConvention.FastCall => "CallConvFastcall",
-                _ => throw new NotSupportedException($"{callingConvention} is not supported for Reverse PInvoke!"),
+                _ => throw new NotSupportedException(string.Format(Properties.Resources.Log_UnsupportedCallingConvention, callingConvention)),
             };
         }
+        #endregion
     }
 }
