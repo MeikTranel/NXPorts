@@ -17,7 +17,7 @@ namespace NXPorts
             if (string.IsNullOrWhiteSpace(assemblyFilePath))
                 throw new ArgumentNullException(nameof(assemblyFilePath));
             if (!File.Exists(assemblyFilePath))
-                throw new ArgumentException("The given file path does not exist.", nameof(assemblyFilePath));
+                throw new ArgumentException(Properties.Resources.ExportAttributedAssembly_FileDoesNotExist, nameof(assemblyFilePath));
             try
             {
 
@@ -32,7 +32,7 @@ namespace NXPorts
             }
             catch (Exception E)
             {
-                throw new InvalidOperationException("NXPorts encountered an exception while trying to load the source assembly.", E);
+                throw new InvalidOperationException(Properties.Resources.ExportAttributedAssembly_ExceptionLoadingSourceAssembly, E);
             }
             ExportDefinitions = new List<ExportDefinition>(RetrieveExportDefinitions());
         }

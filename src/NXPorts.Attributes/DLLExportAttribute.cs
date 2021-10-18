@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace NXPorts.Attributes
 {
-    [AttributeUsage(System.AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
     public sealed class DllExportAttribute : Attribute
     {
         public string Alias { get; private set; }
@@ -12,8 +12,8 @@ namespace NXPorts.Attributes
 
         public DllExportAttribute(string alias = null, CallingConvention callingConvention = CallingConvention.Cdecl)
         {
-            this.Alias = alias;
-            this.CallingConvention = callingConvention;
+            Alias = alias;
+            CallingConvention = callingConvention;
         }
     }
 }

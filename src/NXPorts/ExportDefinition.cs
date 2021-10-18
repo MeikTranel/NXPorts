@@ -46,7 +46,7 @@ namespace NXPorts
         {
             customAlias = "";
             var CA = attributeRef.ConstructorArguments.First(ca => ca.Type.TypeName == "String");
-            if (CA.Value is object)
+            if (CA.Value is not null)
             {
                 customAlias = CA.Value.ToString();
                 return true;

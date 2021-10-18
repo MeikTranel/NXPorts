@@ -8,7 +8,8 @@ namespace NXPorts.Tests.Infrastructure
     {
         internal static class UnsafeNativeMethods
         {
-            [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Ansi)]
+
+            [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
             public static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
 
             [DllImport("kernel32.dll", SetLastError = true)]

@@ -12,11 +12,13 @@
 
   <!-- CSProj/Build related settings -->
   <PropertyGroup>
+    <NeutralLanguage>en-US</NeutralLanguage>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <DebugType>embedded</DebugType>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <!-- Customization -->

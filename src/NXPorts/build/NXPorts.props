@@ -1,0 +1,12 @@
+﻿<Project>
+
+  <PropertyGroup Condition="'$(NXPortsTaskAssemblyDirectory)' == ''">
+    <NXPortsTaskAssemblyDirectory Condition=" '$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)\NETFXMSBuild\</NXPortsTaskAssemblyDirectory>
+    <NXPortsTaskAssemblyDirectory Condition=" '$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)\NETCOREMSBuild\</NXPortsTaskAssemblyDirectory>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!--Default to false in a future major release-->
+    <NXPortsAllowCaseSensitiveDuplicates>$([MSBuild]::ValueOrDefault('$(NXPortsAllowCaseSensitiveDuplicates)', true))</NXPortsAllowCaseSensitiveDuplicates>
+  </PropertyGroup>
+</Project>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NXPorts.Tests.TestFiles
+namespace NXPortsTests.TestFiles
 {
     public static class SimpleWithoutExports
     {
