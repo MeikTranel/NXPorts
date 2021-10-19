@@ -8,7 +8,7 @@ on:
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-  PackageOutputPath: ${{ github.workspace }}/out/packages
+  PackageOutputPath: ${{ github.workspace }}\out\packages
   GPR_REPOURI: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
 
 jobs:
@@ -36,4 +36,4 @@ jobs:
       if: ${{ github.ref == 'refs/heads/master' }}
       run: |
         dotnet nuget add source --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name GPR "${{env.GPR_REPOURI}}"
-        dotnet nuget push "${{env.PackageOutputPath}}/*.nupkg" --source GPR
+        dotnet nuget push "${{env.PackageOutputPath}}\*.nupkg" --source GPR
