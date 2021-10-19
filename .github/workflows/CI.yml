@@ -8,6 +8,8 @@ on:
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  PackageOutputPath: ${{ github.workspace }}/out/packages
+  GPR_REPOURI: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
 
 jobs:
   build:
@@ -19,7 +21,7 @@ jobs:
     - name: Test
       run: dotnet test -c Release -p:EnableCoverage=true -p:ContinuousIntegrationBuild=true -p:BuildType=canary
     - name: Pack
-      run: dotnet pack -c Release -p:PackageOutputPath="$env:GITHUB_WORKSPACE/out/packages" -p:ContinuousIntegrationBuild=true -p:BuildType=canary
+      run: dotnet pack -c Release -p:ContinuousIntegrationBuild=true -p:BuildType=canary
     - name: Upload Code Coverage
       uses: codecov/codecov-action@v2
       with:
@@ -30,3 +32,8 @@ jobs:
       with:
         name: Packages
         path: out/packages
+    - name: Publish CI Package to GitHub Package Registry
+      if: ${{ github.ref == 'refs/heads/master' }}
+      run: |
+        dotnet nuget add source --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name GPR "${{env.GPR_REPOURI}}"
+        dotnet nuget push "${{env.PackageOutputPath}}/*.nupkg" --source GPR
