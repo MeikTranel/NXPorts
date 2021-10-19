@@ -9,7 +9,7 @@
     <Exec Command="git rev-parse HEAD" EchoOff="true" ConsoleToMSBuild="true" StandardOutputImportance="low">
       <Output TaskParameter="ConsoleOutput" PropertyName="CurrentHEAD" />
     </Exec>
-    <CreateProperty Value="$(Version)+$(CurrentHEAD)">
+    <CreateProperty Value="$(Version)-CI.$(CurrentHEAD)">
       <Output TaskParameter="Value" PropertyName="CalculatedVersion" />
     </CreateProperty>
   </Target>
