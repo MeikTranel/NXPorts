@@ -1,6 +1,6 @@
 <Project InitialTargets="InitializeVersion">
   <Target Name="AttachDevVersionSuffix" Condition="'$(BuildType)' == 'dev'">
-    <CreateProperty Value="$(Version)+d.$([System.DateTime]::Now.ToString(yyyyMMdd.hhmmss))">
+    <CreateProperty Value="$(Version)-dev.$([System.DateTime]::Now.ToString(yyyyMMddhhmmss))">
       <Output TaskParameter="Value" PropertyName="CalculatedVersion" />
     </CreateProperty>
   </Target>

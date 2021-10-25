@@ -39,6 +39,6 @@
       These types shall be used to tweak the build further
       based on the type of build we are initiating.
     -->
-    <BuildType>dev</BuildType>
+    <BuildType>$([MSBuild]::ValueOrDefault('$(BuildType)','dev'))</BuildType>
   </PropertyGroup>
 </Project>
