@@ -5,6 +5,7 @@
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
     <VSTestResultsDirectory>$(TestResultsDirectory)</VSTestResultsDirectory>
+    <VSTestLogger>trx;console%3bverbosity=normal</VSTestLogger>
   </PropertyGroup>
 
   <!--Enable coverage through coverlet's MSBuild task package-->
