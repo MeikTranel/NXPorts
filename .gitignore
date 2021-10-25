@@ -13,3 +13,6 @@
 
 # Local nuget package cache
 packages/
+
+# base output directory
+out/

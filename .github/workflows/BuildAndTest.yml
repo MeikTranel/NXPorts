@@ -1,0 +1,43 @@
+on:
+  workflow_call:
+    inputs:
+      buildtype:
+        description: 'Controls the calculated version - Values: canary, dev, tagged'
+        default: 'canary'
+        required: true
+        type: string
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  BuildType: ${{ inputs.buildtype }}
+  ContinuousIntegrationBuild: true
+
+jobs:
+  build:
+    name: 'Build Type: ${{ inputs.buildtype }}'
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup Dotnet for use with actions
+      uses: actions/setup-dotnet@v1
+    - name: Test
+      run: dotnet test -c Release -p:EnableCoverage=true
+    - name: Pack
+      run: dotnet pack -c Release
+    - name: Upload Code Coverage
+      uses: codecov/codecov-action@v2
+      with:
+        files: tests/**/*.opencover.xml
+        verbose: true
+    - name: Upload Packages
+      uses: actions/upload-artifact@v2
+      with:
+        name: Packages
+        path: out/packages/*.nupkg
+    - name: Upload TestResults
+      uses: actions/upload-artifact@v2
+      with:
+        name: TestResults & Coverage
+        path: |
+          out/coverage/
+          out/testresults/*.trx
