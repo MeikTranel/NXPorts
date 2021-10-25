@@ -74,7 +74,8 @@ jobs:
     - name: Publish CI Package to GitHub Package Registry
       run: |
         dotnet nuget add source --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name GPR "${{env.GPR_REPOURI}}"
-        dotnet nuget push "out\packages\*.nupkg" --source GPR
+        dotnet nuget push "*.nupkg" --source GPR
+      working-directory: out/packages/
 
   deploy-to-nuget-gallery:
     name: Deploy to NuGet Gallery
@@ -94,4 +95,5 @@ jobs:
       uses: actions/setup-dotnet@v1
 
     - name: Publish CI Package to NuGet Gallery
-      run: dotnet nuget push "out\packages\*.nupkg" -k ${{ secrets.NUGETGALLERY_NXPORTS_SECRET }} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push "*.nupkg" -k ${{ secrets.NUGETGALLERY_NXPORTS_SECRET }} -s https://api.nuget.org/v3/index.json
+      working-directory: out/packages/
