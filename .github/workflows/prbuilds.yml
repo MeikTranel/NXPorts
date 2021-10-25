@@ -10,6 +10,7 @@ env:
 
 jobs:
   build:
+    name: Build & Test
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v1
@@ -41,5 +42,5 @@ jobs:
     - name: Upload Packages
       uses: actions/upload-artifact@v2
       with:
-        name: Packages
+        name: packages
         path: out/packages/*.nupkg

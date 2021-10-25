@@ -12,6 +12,7 @@ env:
 
 jobs:
   build:
+    name: Build & Test
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v1
@@ -43,7 +44,7 @@ jobs:
     - name: Upload Packages
       uses: actions/upload-artifact@v2
       with:
-        name: Packages
+        name: packages
         path: out/packages/*.nupkg
 
   deploy-to-gpr:
@@ -55,6 +56,12 @@ jobs:
       GPR_REPOURI: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
     steps:
     - uses: actions/checkout@v1
+
+    - uses: actions/download-artifact@v2
+      name: Download Packages from build job
+      with:
+        name: packages
+        path: out/packages/
 
     - name: Setup Dotnet for use with actions
       uses: actions/setup-dotnet@v1
@@ -71,6 +78,12 @@ jobs:
     environment: NuGet Gallery
     steps:
     - uses: actions/checkout@v1
+
+    - uses: actions/download-artifact@v2
+      name: Download Packages from build job
+      with:
+        name: packages
+        path: out/packages/
 
     - name: Setup Dotnet for use with actions
       uses: actions/setup-dotnet@v1
