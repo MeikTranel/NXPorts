@@ -8,6 +8,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/meiktranel/nxports</PackageProjectUrl>
     <RepositoryUrl>https://github.com/meiktranel/nxports.git</RepositoryUrl>
+    <ReleaseNotesFile>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)','CHANGELOG.md'))</ReleaseNotesFile>
   </PropertyGroup>
 
   <!-- Directories etc. -->

@@ -1,0 +1,20 @@
+name: Draft a new release
+
+on:
+  milestone:
+    types: [closed]
+jobs:
+  create-release-checklist-issue:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create checklist issue
+      uses: JasonEtco/create-an-issue@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        INTENDEDVERSION: ${{ github.event.milestone.title }}
+      with:
+        filename: .github/workflows/RELEASE-CHECKLIST-TEMPLATE.md
+        milestone: ${{ github.event.milestone.number }}
+

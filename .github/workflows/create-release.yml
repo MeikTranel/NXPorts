@@ -1,0 +1,43 @@
+name: Create a new release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Setup Dotnet for use with actions
+      uses: actions/setup-dotnet@v1
+
+    - name: Set version env variable
+      run: dotnet build src/NXPorts/NXPorts.csproj -t:ExportVersionAsGHWorkflowEnvVariable
+
+    - name: Create Release
+      uses: ncipollo/release-action@v1.8.10
+      with:
+        tag: v${{ env.GITHUB_NXPORTS_VERSION }}
+        bodyFile: CHANGES.MD
+
+  archive-and-reset-changelog:
+    name: Archive & reset CHANGES.MD
+    needs: [ create-release ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Prepend changelog
+        shell: pwsh
+        run: |
+          Set-Content .\docs\CHANGELOG.md @( "## Changes in v${{ env.GITHUB_NXPORTS_VERSION }}", "",(Get-Content .\CHANGES.md | Select-Object -Skip 2), "", (Get-Content .\docs\CHANGELOG.md) )
+          Set-Content .\CHANGES.md @("# Changes since v${{ env.GITHUB_NXPORTS_VERSION }}")
+
+      - name: Commit & push updated files
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Archive and reset CHANGES.md"
+          git push

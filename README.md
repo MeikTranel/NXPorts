@@ -50,7 +50,15 @@ This will restore, build and pack all available projects. Testing this project i
   dotnet test
 ```
 
-More information about the release process can be found [here](./docs/Releasing-NXPorts.md).
+## Releasing NXPorts
+
+To start releasing a new NXPorts version you just have close the associated milestone.
+GitHub actions will then generate a checklist issue with further guidance.
+
+**Fundamentals**:
+
+- We're releasing to ``production`` (as in NuGet Gallery) from `tagged` builds
+- We're releasing ``canary`` builds from master to our canary feed (GPR)
 
 ## Contributing
 

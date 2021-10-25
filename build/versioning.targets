@@ -20,4 +20,23 @@
       <Output TaskParameter="Value" PropertyName="PackageVersion" />
     </CreateProperty>
   </Target>
+
+  <!-- Parse ReleaseNotesFile into PackageReleaseNotes when it is set -->
+  <PropertyGroup>
+    <GenerateNuspecDependsOn>ReadPackageReleaseNotesFromFile;$(GenerateNuspecDependsOn)</GenerateNuspecDependsOn>
+  </PropertyGroup>
+  <Target Name="ReadPackageReleaseNotesFromFile" Condition="'$(ReleaseNotesFile)' != ''">
+    <ReadLinesFromFile File="$(ReleaseNotesFile)" >
+      <Output TaskParameter="Lines" ItemName="_PackageReleaseNotesFileLines"/>
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(_PackageReleaseNotesFileLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+
+  <!-- There is no dotnet tool to read an evaluated property from a project thus we need to be crafty -->
+  <Target Name="ExportVersionAsGHWorkflowEnvVariable" >
+    <WriteLinesToFile File="$(GITHUB_ENV)" Lines="GITHUB_NXPORTS_VERSION=$(Version)" Condition="'$(GITHUB_ENV)' != ''" />
+    <Warning Text="Current environment doesn't seem to run in a GitHub Actions context."  Condition="'$(GITHUB_ENV)' == ''" />
+  </Target>
 </Project>
