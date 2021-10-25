@@ -4,6 +4,7 @@
   <PropertyGroup>
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
+    <VSTestResultsDirectory>$(TestResultsDirectory)</VSTestResultsDirectory>
   </PropertyGroup>
 
   <!--Enable coverage through coverlet's MSBuild task package-->
@@ -16,6 +17,6 @@
   <PropertyGroup Condition="'$(EnableCoverage)' == 'true'">
     <CollectCoverage>true</CollectCoverage>
     <CoverletOutputFormat>cobertura,opencover</CoverletOutputFormat>
-    <CoverletOutput>$(MSBuildProjectDirectory)/bin/coverage/</CoverletOutput>
+    <CoverletOutput>$(TestCoverageDirectory)</CoverletOutput>
   </PropertyGroup>
 </Project>

@@ -10,6 +10,13 @@
     <RepositoryUrl>https://github.com/meiktranel/nxports.git</RepositoryUrl>
   </PropertyGroup>
 
+  <!-- Directories etc. -->
+  <PropertyGroup>
+    <BaseOutputDirectory>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)','out'))</BaseOutputDirectory>
+    <TestCoverageDirectory>$([MSBuild]::NormalizeDirectory('$(BaseOutputDirectory)','coverage'))</TestCoverageDirectory>
+    <TestResultsDirectory>$([MSBuild]::NormalizeDirectory('$(BaseOutputDirectory)','testresults'))</TestResultsDirectory>
+  </PropertyGroup>
+
   <!-- CSProj/Build related settings -->
   <PropertyGroup>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -19,6 +26,7 @@
     <AnalysisLevel>latest</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <LangVersion>9</LangVersion>
+    <PackageOutputPath>$([MSBuild]::NormalizeDirectory('$(BaseOutputDirectory)','packages'))</PackageOutputPath>
   </PropertyGroup>
 
   <!-- Customization -->

@@ -1,13 +1,14 @@
-name: Build & Deploy Tagged Releases
+name: Canary Builds
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+    - master
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   ContinuousIntegrationBuild: true
-  BuildType: tagged
+  BuildType: canary
 
 jobs:
   build:
