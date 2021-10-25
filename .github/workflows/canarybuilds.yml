@@ -63,6 +63,11 @@ jobs:
         name: packages
         path: out/packages/
 
+    - name: DirListing
+      run: ls -R
+      working-directory: out/packages/
+
+
     - name: Setup Dotnet for use with actions
       uses: actions/setup-dotnet@v1
 
