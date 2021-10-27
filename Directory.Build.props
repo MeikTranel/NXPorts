@@ -4,7 +4,7 @@
     <Title>NXPorts</Title>
     <Description>A utility library to add export functions to the output dll on build.</Description>
     <Authors>Meik Tranel</Authors>
-    <Version>1.0.1</Version>
+    <Version>1.1.0</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/meiktranel/nxports</PackageProjectUrl>
     <RepositoryUrl>https://github.com/meiktranel/nxports.git</RepositoryUrl>
