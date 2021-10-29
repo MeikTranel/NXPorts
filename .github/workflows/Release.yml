@@ -50,7 +50,9 @@ jobs:
     name: Deploy to GPR
     needs: [ build ]
     runs-on: ubuntu-latest
-    environment: GPR
+    environment:
+      name: GPR
+      url: https://github.com/MeikTranel/NXPorts/packages
     env:
       GPR_REPOURI: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
     steps:
@@ -75,7 +77,9 @@ jobs:
     name: Deploy to NuGet Gallery
     needs: [ build ]
     runs-on: ubuntu-latest
-    environment: NuGet Gallery
+    environment:
+      name: NuGet Gallery
+      url: https://www.nuget.org/packages/NXPorts/
     steps:
     - uses: actions/checkout@v1
 
