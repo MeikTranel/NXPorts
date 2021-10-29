@@ -9,9 +9,11 @@
     <projectUrl>$projectUrl$</projectUrl>
     <repository type="git" url="$repositoryUrl$" commit="$commitHash$" />
     <releaseNotes>$releaseNotes$</releaseNotes>
+    <readme>README.md</readme>
   </metadata>
   <dependencies/>
   <files>
+    <file src=".\packagereadme.md" target="README.md" />
     <file src=".\build\**\*" target="build\" />
     <file src="..\NXPorts.Attributes\bin\$configuration$\netstandard1.1\NXPorts.Attributes.dll" target="lib\NXPorts.Attributes.dll" />
     <file src=".\bin\$configuration$\net46\NXPorts*.dll" target="build\NETFXMSBuild" />
