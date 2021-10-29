@@ -24,7 +24,7 @@ jobs:
     - name: Upload Code Coverage
       uses: codecov/codecov-action@v2
       with:
-        files: tests/**/*.opencover.xml
+        files: out/coverage/**/*.opencover.xml
       if: ${{ always() }}
 
     - name: Upload TestResults
