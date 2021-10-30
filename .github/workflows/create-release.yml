@@ -3,11 +3,16 @@ name: Create a new release
 on:
   workflow_dispatch:
 
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  ContinuousIntegrationBuild: true
+  BuildType: tagged
+
 jobs:
   create-release:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
 
     - name: Setup Dotnet for use with actions
       uses: actions/setup-dotnet@v1
@@ -19,7 +24,8 @@ jobs:
       uses: ncipollo/release-action@v1.8.10
       with:
         tag: v${{ env.GITHUB_NXPORTS_VERSION }}
-        bodyFile: CHANGES.MD
+        bodyFile: CHANGES.md
+        draft: true
 
   archive-and-reset-changelog:
     name: Archive & reset CHANGES.MD
