@@ -37,7 +37,7 @@ jobs:
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3.10.1
       with:
-        branch: automated/changesMD-reset-after-v${{ env.GITHUB_NXPORTS_VERSION }}")-${{ github.run_id }}
+        branch: automated/changesMD-reset-after-v${{ env.GITHUB_NXPORTS_VERSION }}-${{ github.run_id }}
         labels: bot
         title: v${{ env.GITHUB_NXPORTS_VERSION }} post-release chores
         committer: github-actions <github-actions@github.com>
