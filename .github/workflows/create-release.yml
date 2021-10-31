@@ -9,7 +9,8 @@ env:
   BuildType: tagged
 
 jobs:
-  create-release:
+  create-release-and-archive-changes:
+    name: Create Release & Archive CHANGES.md
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -36,8 +37,9 @@ jobs:
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3.10.1
       with:
-        branch: automated/changesMD-reset-after-v${{ env.GITHUB_NXPORTS_VERSION }}")-${{github.run.id}}
+        branch: automated/changesMD-reset-after-v${{ env.GITHUB_NXPORTS_VERSION }}")-${{ github.run_id }}
         labels: bot
-        title: Archive & reset CHANGES.md after the release of v${{ env.GITHUB_NXPORTS_VERSION }}")
+        title: v${{ env.GITHUB_NXPORTS_VERSION }} post-release chores
         committer: github-actions <github-actions@github.com>
+        commit-message: Archive & reset CHANGES.md after the release of v${{ env.GITHUB_NXPORTS_VERSION }}
 
