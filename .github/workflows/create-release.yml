@@ -27,29 +27,17 @@ jobs:
         bodyFile: CHANGES.md
         draft: true
 
-  archive-and-reset-changelog:
-    name: Archive & reset CHANGES.MD
-    needs: [ create-release ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+    - name: Prepend changelog
+      shell: pwsh
+      run: |
+        Set-Content .\docs\CHANGELOG.md @( "## Changes in v${{ env.GITHUB_NXPORTS_VERSION }}", "",(Get-Content .\CHANGES.md | Select-Object -Skip 2), "", (Get-Content .\docs\CHANGELOG.md) )
+        Set-Content .\CHANGES.md @("# Changes since v${{ env.GITHUB_NXPORTS_VERSION }}")
 
-      - name: Prepend changelog
-        shell: pwsh
-        run: |
-          Set-Content .\docs\CHANGELOG.md @( "## Changes in v${{ env.GITHUB_NXPORTS_VERSION }}", "",(Get-Content .\CHANGES.md | Select-Object -Skip 2), "", (Get-Content .\docs\CHANGELOG.md) )
-          Set-Content .\CHANGES.md @("# Changes since v${{ env.GITHUB_NXPORTS_VERSION }}")
-
-      - name: Commit & push updated files
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add --all
-          git commit -m "Archive and reset CHANGES.md"
-
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3.10.1
-        with:
-          branch: automated/changesMD-reset-after-v${{ env.GITHUB_NXPORTS_VERSION }}")-${{github.run.id}}
-          labels: bot
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3.10.1
+      with:
+        branch: automated/changesMD-reset-after-v${{ env.GITHUB_NXPORTS_VERSION }}")-${{github.run.id}}
+        labels: bot
+        title: Archive & reset CHANGES.md after the release of v${{ env.GITHUB_NXPORTS_VERSION }}")
+        committer: github-actions <github-actions@github.com>
 
