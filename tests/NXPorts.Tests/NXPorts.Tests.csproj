@@ -7,7 +7,7 @@
     <ProjectReference Include="../../src/NXPorts/NXPorts.csproj" />
     <ProjectReference Include="../../src/NXPorts.Attributes/NXPorts.Attributes.csproj" />
 
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
     <PackageReference Include="PeNet" Version="1.6.1" />
     <PackageReference Include="MSBuild.ProjectCreation" Version="6.3.0" />
     <PackageReference Include="Buildalyzer" Version="3.2.3" />
