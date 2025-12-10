@@ -98,7 +98,7 @@ namespace NXPorts
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return StringComparer.InvariantCultureIgnoreCase.GetHashCode(Alias);
         }
     }
 }
