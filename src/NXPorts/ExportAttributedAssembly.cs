@@ -41,14 +41,15 @@ namespace NXPorts
 
         private IEnumerable<ExportDefinition> RetrieveExportDefinitions()
         {
-            var definitions = new Collection<ExportDefinition>();
+            var dllExportAttributeFullName = typeof(Attributes.DllExportAttribute).FullName;
+            var definitions = new List<ExportDefinition>();
             foreach (var type in Module.Types)
             {
                 foreach (var method in type.Methods)
                 {
-                    if (method.CustomAttributes.IsDefined(new Attributes.DllExportAttribute().GetType().FullName))
+                    if (method.CustomAttributes.IsDefined(dllExportAttributeFullName))
                     {
-                        var attributeRef = method.CustomAttributes.Find(new Attributes.DllExportAttribute().GetType().FullName);
+                        var attributeRef = method.CustomAttributes.Find(dllExportAttributeFullName);
                         var expDef = ExportDefinition.Create(method, attributeRef);
                         definitions.Add(expDef);
                     }

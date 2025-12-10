@@ -64,42 +64,39 @@ namespace NXPorts
 
         private bool PassesCaseInsensitiveAliasesCheck(ExportAttributedAssembly expAttributedAssembly)
         {
-            var groupedExports = expAttributedAssembly.ExportDefinitions.GroupBy(def => def.Alias, StringComparer.InvariantCultureIgnoreCase);
-            if (groupedExports.Any(d => d.Count() >= 2))
+            var groupedExports = expAttributedAssembly.ExportDefinitions
+                .GroupBy(def => def.Alias, StringComparer.InvariantCultureIgnoreCase);
+            var duplicateGroups = groupedExports.Where(d => d.Count() >= 2).ToList();
+            
+            if (duplicateGroups.Count > 0)
             {
-                foreach (var group in groupedExports.Where(d => d.Count() >= 2))
+                foreach (var group in duplicateGroups)
                 {
                     if (AllowCaseSensitiveDuplicates)
                         Log.LogWarningWithCodeFromResources(Diagnostics.DuplicateAliasesWithDifferentCaps.MessageResourceKey, group.Key);
                     else
                         Log.LogErrorWithCodeFromResources(Diagnostics.DuplicateAliases.MessageResourceKey, group.Key);
                 }
-                if (AllowCaseSensitiveDuplicates)
-                    return true;
-                else
-                    return false;
+                return AllowCaseSensitiveDuplicates;
             }
-            else
-            {
-                return true;
-            }
+            return true;
         }
 
         private bool AssemblyContainsDuplicateExportAliases(ExportAttributedAssembly expAttributedAssembly)
         {
-            var groupedExports = expAttributedAssembly.ExportDefinitions.GroupBy(def => def.Alias, StringComparer.InvariantCulture);
-            if (groupedExports.Any(d => d.Count() >= 2))
+            var groupedExports = expAttributedAssembly.ExportDefinitions
+                .GroupBy(def => def.Alias, StringComparer.InvariantCulture);
+            var duplicateGroups = groupedExports.Where(d => d.Count() >= 2).ToList();
+            
+            if (duplicateGroups.Count > 0)
             {
-                foreach (var group in groupedExports.Where(d => d.Count() >= 2))
+                foreach (var group in duplicateGroups)
                 {
                     Log.LogErrorWithCodeFromResources(Diagnostics.DuplicateAliases.MessageResourceKey, group.Key);
                 }
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
         #endregion
 
